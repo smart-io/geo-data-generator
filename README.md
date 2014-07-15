@@ -1,5 +1,4 @@
-SmartData
-=========
+# <img src="icon.png" width="38" height="38" alt=""> SmartData
 
 [![Build Status](https://img.shields.io/travis/flighthub/smartdata/master.svg?style=flat)](https://travis-ci.org/flighthub/smartdata)
 [![Latest Stable Version](http://img.shields.io/packagist/v/flighthub/smartdata.svg?style=flat)](https://packagist.org/packages/flighthub/smartdata)
