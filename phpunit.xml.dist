@@ -8,8 +8,8 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="Flighthub SmartData Test Suite">
-            <directory>./tests/SmartData/</directory>
+        <testsuite name="SmartData Factory Test Suite">
+            <directory>./tests/Factory/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -1,5 +1,5 @@
 <?php
-namespace Flighthub\SmartData\Tests;
+namespace SmartData\Factory\Tests;
 
 use PHPUnit_Framework_TestCase;
 

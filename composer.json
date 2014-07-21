@@ -1,33 +1,22 @@
 {
-    "name": "flighthub/smartdata",
-    "type": "library",
-    "description": "PHP library top manage data about the world.",
-    "keywords": ["World", "Data", "Smart"],
-    "homepage": "https://github.com/flighthub/smartdata",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Gabriel Bull",
-            "email": "me@gabrielbull.com"
-        }
-    ],
+    "name": "smartdata/factory",
     "require": {
         "php": ">=5.4.0",
         "symfony/console": "2.*",
         "psr/log": "~1",
-        "maxmind-db/reader": "0.3.*"
+        "sinergi/config": "0.4.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4"
     },
     "autoload": {
         "psr-4": {
-            "Flighthub\\SmartData\\": "src/SmartData"
+            "SmartData\\Factory\\": "src/Factory"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Flighthub\\SmartData\\Tests\\": ["tests/SmartData/Tests", "tests/SmartData/Tests/_includes"]
+            "SmartData\\Factory\\Tests\\": ["tests/Factory/Tests", "tests/Factory/Tests/_includes"]
         }
     }
 }

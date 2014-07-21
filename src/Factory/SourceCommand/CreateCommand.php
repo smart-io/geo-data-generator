@@ -1,15 +1,16 @@
 <?php
-namespace Flighthub\SmartData\Command;
+namespace SmartData\Factory\SourceCommand;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateCommand extends Command
+class CreateCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('update')->setDescription('Update all databases');
+        $this->setName('source:create')
+            ->setDescription('Create the sources JSON file');
     }
 
     /**
@@ -19,5 +20,8 @@ class UpdateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->write('Creating the sources JSON file: ');
+        //$output->write('[ <fg=green>OK</fg=green> ]', true);
+        //$output->write('[ <error>Failed: Process is already runnning</error> ]', true);
     }
 }
