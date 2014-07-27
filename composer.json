@@ -18,5 +18,6 @@
         "psr-4": {
             "SmartData\\Factory\\Tests\\": ["tests/Factory/Tests", "tests/Factory/Tests/_includes"]
         }
-    }
+    },
+    "bin": ["bin/smartdatafactory"]
 }
