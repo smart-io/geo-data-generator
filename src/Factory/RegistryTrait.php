@@ -1,7 +1,7 @@
 <?php
 namespace SmartData\Factory;
 
-use Sinergi\Config\Config;
+use Sinergi\Config\Config as SinergiConfig;
 
 trait RegistryTrait
 {
@@ -11,7 +11,7 @@ trait RegistryTrait
     abstract function getRegistry();
 
     /**
-     * @return Config
+     * @return SinergiConfig
      */
     public function getConfig()
     {
@@ -19,10 +19,10 @@ trait RegistryTrait
     }
 
     /**
-     * @param Config $config
+     * @param SinergiConfig $config
      * @return $this
      */
-    public function setConfig(Config $config)
+    public function setConfig(SinergiConfig $config)
     {
         $this->getRegistry()->setConfig($config);
         return $this;
