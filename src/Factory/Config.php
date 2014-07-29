@@ -44,10 +44,19 @@ class Config
 
     /**
      * @return string
+     * @deprecated
      */
     public function getProviderStorage()
     {
+        if (null === $this->providerStorage) {
+            $this->providerStorage = __DIR__ . "/../../storage";
+        }
         return $this->providerStorage;
+    }
+
+    public function getStorage()
+    {
+        return $this->getProviderStorage();
     }
 
     /**
