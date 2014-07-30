@@ -19,6 +19,21 @@ class UploadCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+
+        $localStorage = $this->getRegistry()->getConfig()->getFactoryStorage();
+        $fileList = require 'FileList.php';
+        foreach ($fileList as $file) {
+            if (!is_file("{$localStorage}/{$file}")) {
+                $output->write(
+                    '<error>Failed: Some files are not generated, use the generate command</error>',
+                    true
+                );
+                return;
+            }
+        }
+
         $preference = $this->getRegistry()->getPreference();
 
         $provierRemote = $preference->get('provider_remote');
@@ -39,15 +54,10 @@ class UploadCommand extends Command
             $preference->set('provider_remote', ['server' => $server, 'path' => $path]);
         }
 
-        ini_set('memory_limit', '-1');
-        set_time_limit(0);
-
-        $localStorage = $this->getRegistry()->getConfig()->getStorage();
-
         $output->write('Uploading files: ');
-        foreach (require 'FileList.php' as $file) {
-            exec("scp {$localStorage}/{$file} {$server}:{$path}/{$file}");
-        }
+
+        $localStorage = realpath($localStorage);
+        exec("rsync -rave ssh {$localStorage}/* {$server}:{$path}");
         $output->write('[ <fg=green>DONE</fg=green> ]', true);
     }
 }

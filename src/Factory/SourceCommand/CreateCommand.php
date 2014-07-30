@@ -38,13 +38,11 @@ class CreateCommand extends Command
             $source[] = $sourceFactory->create(new $class);
         }
 
-        $file = realpath($this->getRegistry()->getConfig()->getProviderStorage());
-        if (is_dir($file)) {
-            $file = $file . DIRECTORY_SEPARATOR . 'source.json';
-            file_put_contents($file, json_encode($source, JSON_PRETTY_PRINT));
-            $output->write('[ <fg=green>OK</fg=green> ]', true);
-        } else {
-            $output->write('[ <error>Failed: Directory is non existant</error> ]', true);
+        $file = $this->getRegistry()->getConfig()->getFactoryStorage();
+        if (!is_dir($file)) {
+            mkdir($file, 0777, true);
         }
+        file_put_contents("{$file}/source.json", json_encode($source, JSON_PRETTY_PRINT));
+        $output->write('[ <fg=green>OK</fg=green> ]', true);
     }
 }

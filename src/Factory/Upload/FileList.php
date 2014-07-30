@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'source.json'
+    'source.json',
+    'airports/airports.json'
 ];

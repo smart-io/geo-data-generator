@@ -26,8 +26,8 @@ class Mapper
      */
     public function mapXmlToJson()
     {
-        $xmlFile = $this->registry->getConfig()->get('path.storage') . '/' . self::XML_FILENAME;
-        $jsonFile =  $this->registry->getConfig()->get('path.provider_storage') . '/' . self::JSON_FILENAME;
+        $xmlFile = $this->registry->getConfig()->getStorage() . '/' . self::XML_FILENAME;
+        $jsonFile =  $this->registry->getConfig()->getFactoryStorage() . '/' . self::JSON_FILENAME;
 
         $xml = $this->readXmlFile($xmlFile);
 

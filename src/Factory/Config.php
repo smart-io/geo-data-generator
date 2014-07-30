@@ -68,4 +68,12 @@ class Config
         $this->providerStorage = $providerStorage;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getFactoryStorage()
+    {
+        return $this->getStorage() . '/factory';
+    }
 }
