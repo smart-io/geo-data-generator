@@ -28,6 +28,9 @@ class SourceMapper
         if ($source->getFilename()) {
             $retval['filename'] = $source->getFilename();
         }
+        if ($source->getPath()) {
+            $retval['path'] = $source->getPath();
+        }
         return $retval;
     }
 }

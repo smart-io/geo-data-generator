@@ -9,4 +9,5 @@ interface SourceInterface
     public function getCompression();
     public function getProvider();
     public function getFilename();
+    public function getPath();
 }

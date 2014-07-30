@@ -68,4 +68,15 @@ abstract class AbstractSource implements SourceInterface
         }
         return null;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getPath()
+    {
+        if (defined('static::PATH')) {
+            return constant('static::PATH');
+        }
+        return null;
+    }
 }
