@@ -14,6 +14,11 @@ class Registry
     private $preference;
 
     /**
+     * @var SupportedLanguageCollection
+     */
+    private $supportedLanguageCollection;
+
+    /**
      * @return Config
      */
     public function getConfig()
@@ -52,6 +57,27 @@ class Registry
     public function setPreference(Preference $preference)
     {
         $this->preference = $preference;
+        return $this;
+    }
+
+    /**
+     * @return SupportedLanguageCollection
+     */
+    public function getSupportedLanguageCollection()
+    {
+        if (null === $this->supportedLanguageCollection) {
+            $this->supportedLanguageCollection = new SupportedLanguageCollection();
+        }
+        return $this->supportedLanguageCollection;
+    }
+
+    /**
+     * @param SupportedLanguageCollection $supportedLanguageCollection
+     * @return $this
+     */
+    public function setSupportedLanguageCollection(SupportedLanguageCollection $supportedLanguageCollection)
+    {
+        $this->supportedLanguageCollection = $supportedLanguageCollection;
         return $this;
     }
 }

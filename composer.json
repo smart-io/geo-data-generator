@@ -4,6 +4,7 @@
         "php": ">=5.4.0",
         "symfony/console": "2.*",
         "psr/log": "~1",
+        "guzzlehttp/guzzle": "4.0.*",
         "sinergi/config": "0.4.*"
     },
     "require-dev": {

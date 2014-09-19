@@ -72,6 +72,14 @@ class Config
     /**
      * @return string
      */
+    public function getSourceStorage()
+    {
+        return $this->getStorage() . '/source';
+    }
+
+    /**
+     * @return string
+     */
     public function getFactoryStorage()
     {
         return $this->getStorage() . '/factory';
