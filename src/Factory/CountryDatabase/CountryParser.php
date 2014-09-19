@@ -47,16 +47,16 @@ class CountryParser
             trigger_error('Could not find country names for ' . $country['name'], E_USER_ERROR);
         }
 
-        if (empty($coordinates)) {
-            trigger_error('Could not find country coordinates for ' . $country['name'], E_USER_ERROR);
+        if (!empty($codes) && !empty($coordinates)) {
+            return [
+                'names' => $names,
+                'info' => $info,
+                'codes' => $codes,
+                'coordinates' => $coordinates
+            ];
         }
 
-        return [
-            'names' => $names,
-            'info' => $info,
-            'codes' => $codes,
-            'coordinates' => $coordinates
-        ];
+        return null;
     }
 
     /**
@@ -157,9 +157,10 @@ class CountryParser
      * @param array $names
      * @param string $link
      * @param array $info
+     * @param bool $searchDeeper
      * @return string
      */
-    public function getCountryCodes($name, array $names, $link, array $info)
+    public function getCountryCodes($name, array $names, $link, array $info, $searchDeeper = true)
     {
         $original = [$name, $names, $link, $info];
 
@@ -232,17 +233,21 @@ class CountryParser
             }
         }
 
-        $isoCode = $this->getIsoCountryCodesFromWikiPage($link);
-        if ($isoCode) {
-            $original[3]['iso3166code'] = $isoCode;
-            return $this->getCountryCodes($original[0], $original[1], $original[2], $original[3]);
+        if ($searchDeeper) {
+            $isoCode = $this->getIsoCountryCodesFromWikiPage($link);
+            if ($isoCode) {
+                $original[3]['iso3166code'] = $isoCode;
+                return $this->getCountryCodes($original[0], $original[1], $original[2], $original[3], false);
+            }
         }
-
-        trigger_error('Could not find country codes for ' . $names['en'], E_USER_ERROR);
 
         return null;
     }
 
+    /**
+     * @param string $link
+     * @return mixed|null
+     */
     public function getIsoCountryCodesFromWikiPage($link)
     {
         $url = sprintf(self::WIKIPEDIA_PAGE_URL, urlencode($link));
@@ -266,21 +271,28 @@ class CountryParser
     {
         $url = sprintf(self::GEOLOCATION_URL, urlencode($countryName));
         $result = json_decode(file_get_contents($url), true);
-        $bounds = $result['results'][0]['geometry']['bounds'];
-        $location = $result['results'][0]['geometry']['location'];
-        return [
-            'boundaries' => [
-                'northeast' => [
-                    'latitude' => (string)$bounds['northeast']['lat'],
-                    'longitude' => (string)$bounds['northeast']['lng'],
+        if (
+            isset($result['results'][0]['geometry']['bounds']) &&
+            isset($result['results'][0]['geometry']['location'])
+        ) {
+            $bounds = $result['results'][0]['geometry']['bounds'];
+            $location = $result['results'][0]['geometry']['location'];
+            return [
+                'boundaries' => [
+                    'northeast' => [
+                        'latitude' => (string)$bounds['northeast']['lat'],
+                        'longitude' => (string)$bounds['northeast']['lng'],
+                    ],
+                    'southwest' => [
+                        'latitude' => (string)$bounds['southwest']['lat'],
+                        'longitude' => (string)$bounds['southwest']['lng'],
+                    ]
                 ],
-                'southwest' => [
-                    'latitude' => (string)$bounds['southwest']['lat'],
-                    'longitude' => (string)$bounds['southwest']['lng'],
-                ]
-            ],
-            'latitude' => (string)$location['lat'],
-            'longitude' => (string)$location['lng']
-        ];
+                'latitude' => (string)$location['lat'],
+                'longitude' => (string)$location['lng']
+            ];
+        }
+
+        return null;
     }
 }

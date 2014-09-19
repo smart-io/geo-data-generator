@@ -48,12 +48,16 @@ class CountryListParser
 
         $countryParser = new CountryParser();
         foreach ($this->countries as $key => $country) {
-            $this->countries[$key] = $countryParser->parseCountryPage($country);
-            $country = $this->countries[$key];
-            $output->write('Searching for information on ' . $country['names']['en'], true);
+            $output->write('Searching for information on ' . $country['name'] . ': ');
+            $country = $countryParser->parseCountryPage($country);
+            if ($country) {
+                $this->countries[$key] = $country;
+                $output->write("<fg=green>DONE</fg=green>", true);
+            } else {
+                unset($this->countries[$key]);
+                $output->write("<fg=red>ERROR</fg=red>", true);
+            }
         }
-
-        var_dump($this->countries);
     }
 
     /**
