@@ -58,6 +58,8 @@ class CountryListParser
                 $output->write("<fg=red>ERROR</fg=red>", true);
             }
         }
+
+        return $this->countries;
     }
 
     /**

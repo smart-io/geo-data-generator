@@ -22,8 +22,17 @@ class CreateCommand extends Command
     {
         $output->write('Creating the Country Database: ', true);
 
-        $mapper = new CountryListParser();
-        $mapper->parseCountryListPage($output);
+        $cachFile = __DIR__ . "/mukmuk";
+        if (file_exists($cachFile)) {
+            $countriesArray = unserialize(file_get_contents($cachFile));
+        } else {
+            $parser = new CountryListParser();
+            $countriesArray = $parser->parseCountryListPage($output);
+        }
+        file_put_contents($cachFile, serialize($countriesArray));
+
+        $mapper = new CountryMapper($this->getRegistry());
+        $mapper->mapArrayToJson($countriesArray);
 
         $output->write('[ <fg=green>OK</fg=green> ]', true);
         //$output->write('[ <error>Failed: Process is already runnning</error> ]', true);
