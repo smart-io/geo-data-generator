@@ -1,6 +1,7 @@
 <?php
 namespace SmartData\Factory\Upload;
 
+use SmartData\Factory\SourceMapper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use SmartData\Factory\Command;
@@ -23,14 +24,39 @@ class UploadCommand extends Command
         set_time_limit(0);
 
         $localStorage = $this->getRegistry()->getConfig()->getFactoryStorage();
-        $fileList = require 'FileList.php';
-        foreach ($fileList as $file) {
-            if (!is_file("{$localStorage}/{$file}")) {
-                $output->write(
-                    '<error>Failed: Some files are not generated, use the generate command</error>',
-                    true
-                );
-                return;
+
+        $sourceMapper = new SourceMapper();
+        $sources = $sourceMapper->mapFromJson($this->getRegistry()->getConfig());
+
+        foreach ($sources as $source) {
+            if (stripos($source->getProvider(), 'smartdataprovider.com')) {
+                $file = $localStorage . '/' . $source->getPath() . '/' . $source->getFilename();
+                if (!is_file($file)) {
+                    $output->write(
+                        '<error>Failed: Some files are not generated, use the generate command</error>',
+                        true
+                    );
+                    return;
+                }
+
+                if ($source->getComponents()) {
+                    $data = json_decode(file_get_contents($file), true);
+
+                    foreach ($source->getComponents() as $componentName => $component) {
+                        foreach ($data as $entry) {
+                            $key = $entry[$component['key']];
+                            $entryFile = $localStorage . '/' . $component['path'] . '/' .
+                                sprintf($component['filename'], $key);
+                            if (!is_file($entryFile)) {
+                                $output->write(
+                                    '<error>Failed: Some files are not generated, use the generate command</error>',
+                                    true
+                                );
+                                return;
+                            }
+                        }
+                    }
+                }
             }
         }
 

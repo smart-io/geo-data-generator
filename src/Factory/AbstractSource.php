@@ -79,4 +79,15 @@ abstract class AbstractSource implements SourceInterface
         }
         return null;
     }
+
+    /**
+     * @return null|array
+     */
+    public function getComponents()
+    {
+        if (isset($this->components) && is_array($this->components)) {
+            return $this->components;
+        }
+        return null;
+    }
 }

@@ -10,4 +10,5 @@ interface SourceInterface
     public function getProvider();
     public function getFilename();
     public function getPath();
+    public function getComponents();
 }

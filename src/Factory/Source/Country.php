@@ -10,4 +10,13 @@ class Country extends AbstractSource
     const PROVIDER = 'https://smartdataprovider.com/countries/countries.json';
     const PATH = 'countries';
     const FILENAME = 'countries.json';
+
+    protected $components = [
+        'country' => [
+            'key' => 'shortCode',
+            'provider' => 'https://smartdataprovider.com/countries/countries/%s.json',
+            'path' => 'countries/countries',
+            'filename' => '%s.json',
+        ]
+    ];
 }

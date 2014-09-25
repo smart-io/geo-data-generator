@@ -3,6 +3,8 @@ namespace SmartData\Factory;
 
 class SourceMapper
 {
+    const JSON_FILE = 'source.json';
+
     /**
      * @param SourceInterface $source
      * @return array
@@ -31,6 +33,24 @@ class SourceMapper
         if ($source->getPath()) {
             $retval['path'] = $source->getPath();
         }
+        if ($source->getComponents()) {
+            $retval['components'] = $source->getComponents();
+        }
         return $retval;
+    }
+
+    /**
+     * @param Config $config
+     * @return Source[]
+     */
+    public function mapFromJson(Config $config)
+    {
+        $sourceCollection = [];
+        $content = file_get_contents($config->getFactoryStorage() . '/' . self::JSON_FILE);
+        $content = json_decode($content, true);
+        foreach ($content as $source) {
+            $sourceCollection[] = new Source($source);
+        }
+        return $sourceCollection;
     }
 }
