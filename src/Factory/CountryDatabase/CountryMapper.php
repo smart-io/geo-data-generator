@@ -6,6 +6,7 @@ use SmartData\Factory\Registry;
 class CountryMapper
 {
     const JSON_FILENAME = 'countries/countries.json';
+    const COUNTRY_JSON_FILENAME = 'countries/countries/%s.json';
 
     /**
      * @var Registry
@@ -57,6 +58,25 @@ class CountryMapper
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
+
+        $countryJsonFile =  $this->registry->getConfig()->getFactoryStorage() . '/' . self::COUNTRY_JSON_FILENAME;
+        $dir = dirname($countryJsonFile);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        if ($files = scandir($dir)) {
+            foreach ($files as $file) {
+                if ($file !== '.' && $file !== '..') {
+                    unlink($dir . '/' . $file);
+                }
+            }
+        }
+
+        foreach ($json as $country) {
+            $file = sprintf($countryJsonFile, $country['shortCode']);
+            file_put_contents($file, json_encode($country));
+        }
+
         file_put_contents($jsonFile, json_encode($json));
         return $json;
     }
