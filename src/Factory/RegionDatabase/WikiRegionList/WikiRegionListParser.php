@@ -1,18 +1,30 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\CountryRegionList;
+namespace SmartData\Factory\RegionDatabase\WikiRegionList;
 
 use SmartData\Factory\WikiGetter;
 use SmartData\Factory\WikiParser;
 
-class CountryRegionListParser
+class WikiRegionListParser
 {
     /**
-     * @return array
+     * @var array
      */
-    private function getCountryRegionList()
-    {
-        return (new CountryRegionList())->getCountryRegionList();
-    }
+    private $countries = [
+        'us' => [
+            'states' =>
+                'http://en.wikipedia.org/w/api.php?action=query&titles=List_of_states_and_territories_of_the_United_States&prop=revisions&rvprop=content&rvsection=1&format=xml&continue',
+            'federal_districts' =>
+                'http://en.wikipedia.org/w/api.php?action=query&titles=List_of_states_and_territories_of_the_United_States&prop=revisions&rvprop=content&rvsection=2&format=xml&continue',
+            'territories' =>
+                'http://en.wikipedia.org/w/api.php?action=query&titles=List_of_states_and_territories_of_the_United_States&prop=revisions&rvprop=content&rvsection=3&format=xml&continue',
+        ],
+        'ca' => [
+            'provinces' =>
+                'http://en.wikipedia.org/w/api.php?action=query&titles=Provinces_and_territories_of_Canada&prop=revisions&rvprop=content&rvsection=2&format=xml&continue',
+            'territories' =>
+                'http://en.wikipedia.org/w/api.php?action=query&titles=Provinces_and_territories_of_Canada&prop=revisions&rvprop=content&rvsection=4&format=xml&continue'
+        ]
+    ];
 
     /**
      * @var WikiGetter
@@ -27,11 +39,10 @@ class CountryRegionListParser
     /**
      * @return array
      */
-    public function parseAllCountryRegions()
+    public function parseRegionList()
     {
         $list = [];
-        $countries = $this->getCountryRegionList();
-        foreach ($countries as $country => $urls) {
+        foreach ($this->countries as $country => $urls) {
             switch ($country) {
                 case 'us':
                     $list['us']['states'] = $this->parseUsStates($urls['states']);
@@ -76,13 +87,8 @@ class CountryRegionListParser
             $matches = $matches[1];
             foreach ($matches as $key => $match) {
                 if (stripos($match, '|')) {
-                    $regex = "/name=(.*)/";
-                    preg_match($regex, $match, $subMatches);
-                    if (isset($subMatches[1])) {
-                        $matches[$key] = trim($subMatches[1]);
-                    } else {
-                        unset($matches[$key]);
-                    }
+                    $parts = explode('|', $match);
+                    $matches[$key] = trim(current($parts));
                 } else {
                     $matches[$key] = trim($match);
                 }
