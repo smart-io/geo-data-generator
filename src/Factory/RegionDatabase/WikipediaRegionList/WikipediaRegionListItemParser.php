@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\WikiRegionList;
+namespace SmartData\Factory\RegionDatabase\WikipediaRegionList;
 
-use SmartData\Factory\WikiGetter;
+use SmartData\Factory\Wikipedia\WikipediaGetter;
 
-class WikiRegionListItemParser
+class WikipediaRegionListItemParser
 {
     const INFOBOXES_URL =
         'http://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=xml&titles=%s&rvsection=0&continue';
@@ -13,13 +13,13 @@ class WikiRegionListItemParser
         'http://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=xml&titles=List_of_U.S._state_abbreviations&continue';
 
     /**
-     * @var WikiGetter
+     * @var WikipediaGetter
      */
-    private $wikiGetter;
+    private $wikipediaGetter;
 
     public function __construct()
     {
-        $this->wikiGetter = new WikiGetter();
+        $this->wikipediaGetter = new WikipediaGetter();
     }
 
     /**
@@ -65,7 +65,7 @@ class WikiRegionListItemParser
                 break;
         }
 
-        return current($this->wikiGetter->getSearchResult("{$region} {$type}, {$country}"));
+        return current($this->wikipediaGetter->getSearchResult("{$region} {$type}, {$country}"));
     }
 
     /**
@@ -97,10 +97,10 @@ class WikiRegionListItemParser
     public function parseRegionPage($region, $type, $country, $recursive = true)
     {
         $url = sprintf(self::INFOBOXES_URL, $region);
-        $content = $this->wikiGetter->getRevision($url, 'infoboxes.0.contents');
+        $content = $this->wikipediaGetter->getRevision($url, 'infoboxes.0.contents');
 
         if (null === $content) {
-            $content = $this->wikiGetter->getRevision($url, 'intro_section');
+            $content = $this->wikipediaGetter->getRevision($url, 'intro_section');
             if (null !== $content) {
                 $info = $this->parseIntroSection($content);
                 if (!isset($info['name']) && !isset($info['code'])) {
@@ -204,7 +204,7 @@ class WikiRegionListItemParser
         ];
 
         $url = sprintf(self::FULLCONTENT_URL, $link);
-        $retval = $this->getPatternMatches($patterns, $this->wikiGetter->getRawContent($url));
+        $retval = $this->getPatternMatches($patterns, $this->wikipediaGetter->getRawContent($url));
 
         if (isset($retval['code'])) {
             if (strpos($retval['code'], '<')) {
@@ -236,7 +236,7 @@ class WikiRegionListItemParser
      */
     private function getUsRegionLine($region)
     {
-        $content = $this->wikiGetter->getRevision(self::US_STATES_CODES, 'majorSections.0.text');
+        $content = $this->wikipediaGetter->getRevision(self::US_STATES_CODES, 'majorSections.0.text');
         $lines = preg_split("/\\n *\\|\\-(style=\"[^\"]*\")? *\\n/", $content);
         foreach ($lines as $line) {
             if (

@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\Factory\Wikipedia;
 
 use GuzzleHttp\Client;
 
-class WikiGetter
+class WikipediaGetter
 {
     const SEARCH_URL = 'http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=%s&srprop=&format=xml&continue';
 
@@ -15,6 +15,22 @@ class WikiGetter
     public function __construct()
     {
         $this->client = new Client();
+        $this->cache = new WikipediaCache();
+    }
+
+    /**
+     * @param $url
+     * @return object
+     */
+    private function getUrl($url)
+    {
+        if ($this->cache->get($url)) {
+            $response = $this->cache->get($url);
+        } else {
+            $response = json_decode(json_encode($this->client->get($url)->xml()));
+            $this->cache->set($url, $response);
+        }
+        return $response;
     }
 
     /**
@@ -23,9 +39,7 @@ class WikiGetter
      */
     public function getRawContent($url)
     {
-        /** @var \GuzzleHttp\Message\ResponseInterface $response */
-        $response = $this->client->get($url);
-        $response = $response->xml();
+        $response = $this->getUrl($url);
 
         if (isset($response->query) && isset($response->query->pages->page->revisions->rev)) {
             return (string)$response->query->pages->page->revisions->rev;
@@ -40,13 +54,11 @@ class WikiGetter
      */
     public function getRevision($url, $path = null)
     {
-        /** @var \GuzzleHttp\Message\ResponseInterface $response */
-        $response = $this->client->get($url);
-        $response = $response->xml();
+        $response = $this->getUrl($url);
 
         if (isset($response->query) && isset($response->query->pages->page->revisions->rev)) {
             $content = (string)$response->query->pages->page->revisions->rev;
-            $wiki = new WikiParser($content);
+            $wiki = new WikipediaParser($content);
             $content = $wiki->parse();
             if ($path) {
                 return $this->getContentPathRecursive($content, explode('.', $path));
@@ -83,15 +95,13 @@ class WikiGetter
     public function getSearchResult($query)
     {
         $url = sprintf(self::SEARCH_URL, urlencode($query));
-        /** @var \GuzzleHttp\Message\ResponseInterface $response */
-        $response = $this->client->get($url);
-        $response = $response->xml();
+        $response = $this->getUrl($url);
 
         if (isset($response->query) && isset($response->query->search)) {
             $results = [];
             foreach ($response->query->search->p as $result) {
                 $result = current((array)$result);
-                $results[] = $result['title'];
+                $results[] = isset($result->title) ? $result->title : null;
             }
             return $results;
         }

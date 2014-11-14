@@ -1,23 +1,26 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\WikiRegionList;
+namespace SmartData\Factory\RegionDatabase\WikipediaRegionList;
 
 use SmartData\SmartData\Region\Type\FederalDistrict;
 use SmartData\SmartData\Region\Type\Province;
 use SmartData\SmartData\Region\Type\State;
 use SmartData\SmartData\Region\Type\Territory;
 
-class WikiRegionList
+class WikipediaRegionList
 {
-    public function createWikiRegionList()
+    /**
+     * @return array
+     */
+    public function createWikipediaRegionList()
     {
-        $listParser = new WikiRegionListParser();
+        $listParser = new WikipediaRegionListParser();
         $regionList = $listParser->parseRegionList();
 
         $regions = [];
-        $regionParser = new WikiRegionListItemParser();
+        $regionParser = new WikipediaRegionListItemParser();
         foreach ($regionList as $country => $regionTypes) {
-            foreach ($regionTypes as $regionType => $regions) {
-                foreach ($regions as $region) {
+            foreach ($regionTypes as $regionType => $regionItems) {
+                foreach ($regionItems as $region) {
                     $region = $regionParser->parseRegion($region, $regionType, $country);
                     $region['country'] = strtoupper($country);
                     switch ($regionType) {

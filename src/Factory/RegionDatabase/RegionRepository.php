@@ -1,17 +1,18 @@
 <?php
 namespace SmartData\Factory\RegionDatabase;
 
-use SmartData\Factory\RegionDatabase\WikiRegionList\WikiRegionList;
+use SmartData\Factory\RegionDatabase\WikipediaRegionList\WikipediaRegionList;
 
 class RegionRepository
 {
     public function fetchAll()
     {
-        $regionList = $this->fetchWikiRegionList();
+        $regionList = $this->fetchWikipediaRegionList();
+        var_dump($regionList);
     }
 
-    private function fetchWikiRegionList()
+    private function fetchWikipediaRegionList()
     {
-        return (new WikiRegionList())->createWikiRegionList();
+        return (new WikipediaRegionList())->createWikipediaRegionList();
     }
 }

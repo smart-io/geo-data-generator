@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\Factory\Wikipedia;
 
 /**
  * Jungle Wikipedia Syntax Parser
@@ -15,7 +15,7 @@ namespace SmartData\Factory;
  * (array('pageAttributes', 'majorSections', 'externalLinks'))
  * @todo Toggle debug mode - Jungle_WikiSyntax_Parser::show_debug() and Jungle_WikiSyntax_Parser::hide_debug()
  */
-class WikiParser
+class WikipediaParser
 {
     private $text = "";
     private $title = "";

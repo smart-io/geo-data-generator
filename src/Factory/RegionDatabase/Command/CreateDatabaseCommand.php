@@ -3,6 +3,7 @@ namespace SmartData\Factory\RegionDatabase\Command;
 
 use SmartData\Factory\Command;
 use SmartData\Factory\RegionDatabase\RegionRepository;
+use SmartData\Factory\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,6 +24,10 @@ class CreateDatabaseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->write('Creating the Region Database: ', true);
+
+        if ($input->getOption('void-cache')) {
+            (new WikipediaCache())->voidCache();
+        }
 
         $regionMapper = new RegionRepository();
         $regions = $regionMapper->fetchAll();
