@@ -44,19 +44,13 @@ class Config
 
     /**
      * @return string
-     * @deprecated
      */
-    public function getProviderStorage()
+    public function getStorage()
     {
         if (null === $this->providerStorage) {
             $this->providerStorage = __DIR__ . "/../../storage";
         }
         return $this->providerStorage;
-    }
-
-    public function getStorage()
-    {
-        return $this->getProviderStorage();
     }
 
     /**
@@ -74,7 +68,7 @@ class Config
      */
     public function getSourceStorage()
     {
-        return $this->getStorage() . '/source';
+        return $this->getStorage() . '/meta';
     }
 
     /**
@@ -82,6 +76,6 @@ class Config
      */
     public function getFactoryStorage()
     {
-        return $this->getStorage() . '/factory';
+        return $this->getStorage() . '/generator';
     }
 }

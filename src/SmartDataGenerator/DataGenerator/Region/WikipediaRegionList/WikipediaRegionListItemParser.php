@@ -204,7 +204,7 @@ class WikipediaRegionListItemParser
         ];
 
         $url = sprintf(self::FULLCONTENT_URL, $link);
-        $retval = $this->getPatternMatches($patterns, $this->wikipediaGetter->getRawContent($url));
+        $retval = $this->getPatternMatches($patterns, $this->wikipediaGetter->getRawRevision($url));
 
         if (isset($retval['code'])) {
             if (strpos($retval['code'], '<')) {

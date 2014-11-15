@@ -8,8 +8,8 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="SmartData Factory Test Suite">
-            <directory>./tests/Factory/</directory>
+        <testsuite name="SmartData Generator Test Suite">
+            <directory>./tests/SmartDataGenerator/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

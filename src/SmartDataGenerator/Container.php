@@ -1,7 +1,7 @@
 <?php
 namespace SmartData\Factory;
 
-class Registry
+class Container
 {
     /**
      * @var Config
@@ -14,9 +14,9 @@ class Registry
     private $preference;
 
     /**
-     * @var SupportedLanguageCollection
+     * @var LanguageCollection
      */
-    private $supportedLanguageCollection;
+    private $LanguageCollection;
 
     /**
      * @return Config
@@ -61,21 +61,21 @@ class Registry
     }
 
     /**
-     * @return SupportedLanguageCollection
+     * @return LanguageCollection
      */
-    public function getSupportedLanguageCollection()
+    public function getLanguageCollection()
     {
-        if (null === $this->supportedLanguageCollection) {
-            $this->supportedLanguageCollection = new SupportedLanguageCollection();
+        if (null === $this->languageCollection) {
+            $this->languageCollection = new LanguageCollection();
         }
-        return $this->supportedLanguageCollection;
+        return $this->languageCollection;
     }
 
     /**
-     * @param SupportedLanguageCollection $supportedLanguageCollection
+     * @param LanguageCollection $supportedLanguageCollection
      * @return $this
      */
-    public function setSupportedLanguageCollection(SupportedLanguageCollection $supportedLanguageCollection)
+    public function setSupportedLanguageCollection(LanguageCollection $languageCollection)
     {
         $this->supportedLanguageCollection = $supportedLanguageCollection;
         return $this;

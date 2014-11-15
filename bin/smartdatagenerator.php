@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 $vendor = realpath(__DIR__ . '/../vendor');
@@ -23,7 +22,6 @@ use SmartData\Factory\Upload\UploadCommand;
 
 $application = new Application();
 $application->add(new SourceCreateCommand());
-$application->add(new AirportDatabaseCreateCommand());
 $application->add(new CountryDatabaseCreateCommand());
 $application->add(new RegionDatabaseCreateCommand());
 $application->add(new UploadCommand());
