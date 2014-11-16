@@ -11,7 +11,8 @@ class UploadCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('upload')->setDescription('Upload local factory to remote provider');
+        $this->setName('upload')
+            ->setDescription('Upload generated data to remote provider');
     }
 
     /**

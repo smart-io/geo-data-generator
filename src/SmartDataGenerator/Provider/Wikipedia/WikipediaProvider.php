@@ -1,10 +1,10 @@
 <?php
-namespace SmartData\SmartDataGenerator\Wikipedia;
+namespace SmartData\SmartDataGenerator\Provider\Wikipedia;
 
 use GuzzleHttp\Client;
 use SimpleXMLElement;
 
-class WikipediaGetter
+class WikipediaProvider
 {
     const SEARCH_URL = 'http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=%s&srprop=&format=xml&continue';
 

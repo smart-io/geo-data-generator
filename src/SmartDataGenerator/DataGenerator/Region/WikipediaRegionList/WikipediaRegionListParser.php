@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegionList;
+namespace SmartData\SmartDataGenerator\DataGenerator\Region\WikipediaRegionList;
 
-use SmartData\SmartDataGenerator\Wikipedia\WikipediaGetter;
+use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaProvider;
 
 class WikipediaRegionListParser
 {
@@ -26,13 +26,13 @@ class WikipediaRegionListParser
     ];
 
     /**
-     * @var WikipediaGetter
+     * @var WikipediaProvider
      */
-    private $wikipediaGetter;
+    private $wikipediaProvider;
 
     public function __construct()
     {
-        $this->wikipediaGetter = new WikipediaGetter();
+        $this->wikipediaProvider = new WikipediaProvider();
     }
 
     /**
@@ -79,7 +79,7 @@ class WikipediaRegionListParser
          * |10
          * |-
          */
-        $content = $this->wikipediaGetter->getRevision($url, 'majorSections.0.text');
+        $content = $this->wikipediaProvider->getRevision($url, 'majorSections.0.text');
         $regex = "/!scope=\"row\"\\|\\{\\{flag\\|([^}]*)\\}\\}/im";
         preg_match_all($regex, $content, $matches);
         if (isset($matches[1])) {
@@ -125,7 +125,7 @@ class WikipediaRegionListParser
          * |-
          */
 
-        $content = $this->wikipediaGetter->getRevision($url, 'majorSections.0.text');
+        $content = $this->wikipediaProvider->getRevision($url, 'majorSections.0.text');
         $regex = "/style=\"text-align: left;\" \\| \\[\\[([^\\]]*)\\]\\]/im";
         preg_match_all($regex, $content, $matches);
         if (isset($matches[1])) {

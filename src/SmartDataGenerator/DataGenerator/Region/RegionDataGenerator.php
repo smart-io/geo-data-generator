@@ -1,18 +1,19 @@
 <?php
-namespace SmartData\SmartDataGenerator\RegionDatabase;
+namespace SmartData\SmartDataGenerator\DataGenerator\Region;
 
-use SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegion\WikipediaRegionParser;
-use SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegionList\WikipediaRegionList;
+use SmartData\SmartDataGenerator\DataGenerator\Region\WikipediaRegion\WikipediaRegionParser;
+use SmartData\SmartDataGenerator\DataGenerator\Region\WikipediaRegionList\WikipediaRegionList;
 
-class RegionRepository
+class RegionDataGenerator
 {
-    public function fetchAll()
+    public function genereteAllRegion()
     {
         $regions = [];
         $regionList = (new WikipediaRegionList())->createWikipediaRegionList();
         $wikipediaRegionParser = new WikipediaRegionParser();
         foreach ($regionList as $region) {
-            $wikipediaRegionParser->parseRegion($region);
+            $regions[] = $wikipediaRegionParser->parseRegion($region);
         }
+        return $regions;
     }
 }

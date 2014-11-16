@@ -1,13 +1,13 @@
 <?php
-namespace SmartData\SmartDataGenerator\RegionDatabase\Command;
+namespace SmartData\SmartDataGenerator\DataGenerator\Region\Command;
 
 use SmartData\SmartDataGenerator\Command;
-use SmartData\SmartDataGenerator\RegionDatabase\RegionRepository;
-use SmartData\SmartDataGenerator\Wikipedia\WikipediaCache;
+use SmartData\SmartDataGenerator\DataGenerator\Region\RegionDataGenerator;
+use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateDatabaseCommand extends Command
+class GenerateDataCommand extends Command
 {
     protected function configure()
     {
@@ -29,8 +29,8 @@ class CreateDatabaseCommand extends Command
             (new WikipediaCache())->voidCache();
         }
 
-        $regionMapper = new RegionRepository();
-        $regions = $regionMapper->fetchAll();
+        $generator = new RegionDataGenerator();
+        $regions = $generator->genereteAllRegion();
 
         var_dump($regions);
 

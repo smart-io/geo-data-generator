@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\SmartDataGenerator\SourceCommand;
+namespace SmartData\SmartDataGenerator\MetaGenerator\GenerateMetaCommand;
 
 use SmartData\SmartDataGenerator\SourceFactory;
 use SmartData\SmartDataGenerator\Command;
