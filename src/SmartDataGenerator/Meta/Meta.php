@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator\Meta;
 
-class Source extends AbstractSource
+class Meta extends AbstractMeta
 {
     private $type;
     private $url;

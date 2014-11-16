@@ -14,11 +14,10 @@ if (file_exists($vendor . "/autoload.php")) {
 }
 
 use Symfony\Component\Console\Application;
-use SmartData\Factory\SourceCommand\CreateCommand as SourceCreateCommand;
-use SmartData\Factory\AirportDatabase\CreateCommand as AirportDatabaseCreateCommand;
-use SmartData\Factory\CountryDatabase\CreateCommand as CountryDatabaseCreateCommand;
-use SmartData\Factory\RegionDatabase\Command\CreateDatabaseCommand as RegionDatabaseCreateCommand;
-use SmartData\Factory\Upload\UploadCommand;
+use SmartData\SmartDataGenerator\SourceCommand\CreateCommand as SourceCreateCommand;
+use SmartData\SmartDataGenerator\CountryDatabase\CreateCommand as CountryDatabaseCreateCommand;
+use SmartData\SmartDataGenerator\RegionDatabase\Command\CreateDatabaseCommand as RegionDatabaseCreateCommand;
+use SmartData\SmartDataGenerator\Upload\UploadCommand;
 
 $application = new Application();
 $application->add(new SourceCreateCommand());

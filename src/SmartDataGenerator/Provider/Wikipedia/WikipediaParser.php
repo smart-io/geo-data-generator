@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory\Wikipedia;
+namespace SmartData\SmartDataGenerator\Wikipedia;
 
 /**
  * Jungle Wikipedia Syntax Parser

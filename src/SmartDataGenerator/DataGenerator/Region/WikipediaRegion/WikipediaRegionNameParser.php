@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\WikipediaRegion;
+namespace SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegion;
 
-use SmartData\Factory\Wikipedia\WikipediaGetter;
+use SmartData\SmartDataGenerator\Wikipedia\WikipediaGetter;
 
 class WikipediaRegionNameParser
 {

@@ -1,10 +1,11 @@
 <?php
-namespace SmartData\Factory\Upload;
+namespace SmartData\SmartDataGenerator\Upload;
 
-use SmartData\Factory\SourceMapper;
+use SmartData\SmartDataGenerator\SourceMapper;
+use SmartData\SmartDataGenerator\Uploader\Uploader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use SmartData\Factory\Command;
+use SmartData\SmartDataGenerator\Command;
 
 class UploadCommand extends Command
 {
@@ -23,62 +24,9 @@ class UploadCommand extends Command
         ini_set('memory_limit', '-1');
         set_time_limit(0);
 
-        $localStorage = $this->getRegistry()->getConfig()->getFactoryStorage();
+        $uploader = new Uploader();
+        $uploader->uploadAll();
 
-        $sourceMapper = new SourceMapper();
-        $sources = $sourceMapper->mapFromJson($this->getRegistry()->getConfig());
-
-        foreach ($sources as $source) {
-            if (stripos($source->getProvider(), 'smartdataprovider.com')) {
-                $file = $localStorage . '/' . $source->getPath() . '/' . $source->getFilename();
-                if (!is_file($file)) {
-                    $output->write(
-                        '<error>Failed: Some files are not generated, use the generate command</error>',
-                        true
-                    );
-                    return;
-                }
-
-                if ($source->getComponents()) {
-                    $data = json_decode(file_get_contents($file), true);
-
-                    foreach ($source->getComponents() as $componentName => $component) {
-                        foreach ($data as $entry) {
-                            $key = $entry[$component['key']];
-                            $entryFile = $localStorage . '/' . $component['path'] . '/' .
-                                sprintf($component['filename'], $key);
-                            if (!is_file($entryFile)) {
-                                $output->write(
-                                    '<error>Failed: Some files are not generated, use the generate command</error>',
-                                    true
-                                );
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $preference = $this->getRegistry()->getPreference();
-
-        $provierRemote = $preference->get('provider_remote');
-        if (
-            null !== $provierRemote &&
-            $this->dialog->askConfirmation(
-                $output,
-                "Use remote {$provierRemote['server']} ({$provierRemote['path']}) [Y/n]: ",
-                false
-            )
-        ) {
-             $server = $provierRemote['server'];
-             $path = $provierRemote['path'];
-        } else {
-            $server = $this->dialog->ask($output, 'Remote server: ');
-            $path = $this->dialog->ask($output, 'Path on remote server: ');
-
-            $preference->set('provider_remote', ['server' => $server, 'path' => $path]);
-        }
 
         $output->write('Uploading files: ');
 

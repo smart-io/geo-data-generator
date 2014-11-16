@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory\Tests\Wikipedia;
+namespace SmartData\SmartDataGenerator\Tests\Wikipedia;
 
 use PHPUnit_Framework_TestCase;
 

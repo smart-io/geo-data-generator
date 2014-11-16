@@ -1,8 +1,8 @@
 <?php
-namespace SmartData\Factory\SourceCommand;
+namespace SmartData\SmartDataGenerator\SourceCommand;
 
-use SmartData\Factory\SourceFactory;
-use SmartData\Factory\Command;
+use SmartData\SmartDataGenerator\SourceFactory;
+use SmartData\SmartDataGenerator\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

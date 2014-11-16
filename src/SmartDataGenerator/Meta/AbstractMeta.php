@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator\Meta;
 
-abstract class AbstractSource implements SourceInterface
+abstract class AbstractMeta implements MetaInterface
 {
     /**
      * @return null|string

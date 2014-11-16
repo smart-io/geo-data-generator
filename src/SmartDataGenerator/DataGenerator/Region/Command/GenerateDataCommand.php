@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\Command;
+namespace SmartData\SmartDataGenerator\RegionDatabase\Command;
 
-use SmartData\Factory\Command;
-use SmartData\Factory\RegionDatabase\RegionRepository;
-use SmartData\Factory\Wikipedia\WikipediaCache;
+use SmartData\SmartDataGenerator\Command;
+use SmartData\SmartDataGenerator\RegionDatabase\RegionRepository;
+use SmartData\SmartDataGenerator\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

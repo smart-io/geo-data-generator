@@ -1,47 +1,48 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator;
 
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 abstract class Command extends SymfonyCommand
 {
-    use RegistryTrait;
+    /**
+     * @var QuestionHelper
+     */
+    protected $question;
 
     /**
-     * @var DialogHelper
+     * @var Container
      */
-    protected $dialog;
+    private $container;
 
     /**
-     * @var Registry
+     * @param Container $container
      */
-    private $registry;
-
-    public function __construct()
+    public function __construct(Container $container = null)
     {
-        $this->dialog = new DialogHelper;
+        $this->question = new QuestionHelper();
         parent::__construct();
     }
 
     /**
-     * @return Registry
+     * @return Container
      */
-    public function getRegistry()
+    public function getContainer()
     {
-        if (null === $this->registry) {
-            $this->registry = new Registry();
+        if (null === $this->container) {
+            $this->container = new Container();
         }
-        return $this->registry;
+        return $this->container;
     }
 
     /**
-     * @param Registry $registry
+     * @param Container $container
      * @return $this
      */
-    public function setRegistry(Registry $registry)
+    public function setRegistry(Container $container)
     {
-        $this->registry = $registry;
+        $this->container = $container;
         return $this;
     }
 }

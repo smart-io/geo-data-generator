@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator;
 
 class Config
 {
@@ -74,7 +74,7 @@ class Config
     /**
      * @return string
      */
-    public function getFactoryStorage()
+    public function getGeneratorStorage()
     {
         return $this->getStorage() . '/generator';
     }

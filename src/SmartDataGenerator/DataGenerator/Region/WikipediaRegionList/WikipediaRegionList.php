@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\WikipediaRegionList;
+namespace SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegionList;
 
 use SmartData\SmartData\Region\Type\FederalDistrict;
 use SmartData\SmartData\Region\Type\Province;

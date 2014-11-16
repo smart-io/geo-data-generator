@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\Factory\CountryDatabase;
+namespace SmartData\SmartDataGenerator\CountryDatabase;
 
 use SimpleXMLElement;
 use GuzzleHttp\Client;
-use SmartData\Factory\WikiParser;
+use SmartData\SmartDataGenerator\WikiParser;
 
 class CountryParser
 {

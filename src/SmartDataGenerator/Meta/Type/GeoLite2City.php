@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory\Source;
+namespace SmartData\SmartDataGenerator\Source;
 
-use SmartData\Factory\AbstractSource;
+use SmartData\SmartDataGenerator\AbstractSource;
 
 class GeoLite2City extends AbstractSource
 {

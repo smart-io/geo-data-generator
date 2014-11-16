@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory\CountryDatabase;
+namespace SmartData\SmartDataGenerator\CountryDatabase;
 
-use SmartData\Factory\Registry;
+use SmartData\SmartDataGenerator\Registry;
 
 class CountryMapper
 {

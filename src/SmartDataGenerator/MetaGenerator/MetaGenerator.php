@@ -1,31 +1,30 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator\MetaGenerator;
 
-class SourceFactory
+class MetaGenerator
 {
     /**
-     * @var SourceMapper
+     * @var MetaMapper
      */
-    private $sourceMapper;
+    private $metaMapper;
 
     /**
-     * @param SourceInterface $source
      * @return array
      */
-    public function create(SourceInterface $source)
+    public function generateAllMeta()
     {
-        $mapper = $this->getSourceMapper();
-        return $mapper->mapToJson($source);
+        $mapper = $this->getMetaMapper();
+        return $mapper->mapToJson($meta);
     }
 
     /**
-     * @return SourceMapper
+     * @return MetaMapper
      */
-    public function getSourceMapper()
+    public function getMetaMapper()
     {
-        if (null === $this->sourceMapper) {
-            $this->sourceMapper = new SourceMapper();
+        if (null === $this->metaMapper) {
+            $this->metaMapper = new MetaMapper();
         }
-        return $this->sourceMapper;
+        return $this->metaMapper;
     }
 }

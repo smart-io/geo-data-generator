@@ -1,7 +1,7 @@
 <?php
-namespace SmartData\Factory\CountryDatabase;
+namespace SmartData\SmartDataGenerator\CountryDatabase;
 
-use SmartData\Factory\Command;
+use SmartData\SmartDataGenerator\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

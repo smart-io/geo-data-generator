@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator;
 
 class LanguageCollection
 {

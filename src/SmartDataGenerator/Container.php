@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory;
+namespace SmartData\SmartDataGenerator;
 
 class Container
 {
@@ -16,7 +16,7 @@ class Container
     /**
      * @var LanguageCollection
      */
-    private $LanguageCollection;
+    private $languageCollection;
 
     /**
      * @return Config
@@ -72,12 +72,12 @@ class Container
     }
 
     /**
-     * @param LanguageCollection $supportedLanguageCollection
+     * @param LanguageCollection $languageCollection
      * @return $this
      */
     public function setSupportedLanguageCollection(LanguageCollection $languageCollection)
     {
-        $this->supportedLanguageCollection = $supportedLanguageCollection;
+        $this->languageCollection = $languageCollection;
         return $this;
     }
 }

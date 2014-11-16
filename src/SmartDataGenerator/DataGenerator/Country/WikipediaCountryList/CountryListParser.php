@@ -1,8 +1,8 @@
 <?php
-namespace SmartData\Factory\CountryDatabase;
+namespace SmartData\SmartDataGenerator\CountryDatabase;
 
 use GuzzleHttp\Client;
-use SmartData\Factory\HtmlParser;
+use SmartData\SmartDataGenerator\HtmlParser;
 use DOMElement;
 use Symfony\Component\Console\Output\OutputInterface;
 

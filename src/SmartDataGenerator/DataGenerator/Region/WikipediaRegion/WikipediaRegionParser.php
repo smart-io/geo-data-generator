@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\Factory\RegionDatabase\WikipediaRegion;
+namespace SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegion;
 
 class WikipediaRegionParser
 {

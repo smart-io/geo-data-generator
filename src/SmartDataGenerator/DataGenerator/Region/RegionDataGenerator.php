@@ -1,8 +1,8 @@
 <?php
-namespace SmartData\Factory\RegionDatabase;
+namespace SmartData\SmartDataGenerator\RegionDatabase;
 
-use SmartData\Factory\RegionDatabase\WikipediaRegion\WikipediaRegionParser;
-use SmartData\Factory\RegionDatabase\WikipediaRegionList\WikipediaRegionList;
+use SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegion\WikipediaRegionParser;
+use SmartData\SmartDataGenerator\RegionDatabase\WikipediaRegionList\WikipediaRegionList;
 
 class RegionRepository
 {
