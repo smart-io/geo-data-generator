@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\SmartDataGenerator\Provider\Parser;
+namespace SmartData\SmartDataGenerator\Provider\Html;
 
 use DOMDocument;
 use DOMXpath;

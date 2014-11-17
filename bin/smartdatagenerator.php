@@ -15,7 +15,7 @@ if (file_exists($vendor . "/autoload.php")) {
 
 use Symfony\Component\Console\Application;
 //use SmartData\SmartDataGenerator\SourceCommand\CreateCommand as SourceCreateCommand;
-//use SmartData\SmartDataGenerator\CountryDatabase\CreateCommand as CountryDatabaseCreateCommand;
+use SmartData\SmartDataGenerator\DataGenerator\Country\Command\GenerateDataCommand as GenerateCountryDataCommand;
 use SmartData\SmartDataGenerator\DataGenerator\Region\Command\GenerateDataCommand as GenerateRegionDataCommand;
 //use SmartData\SmartDataGenerator\Upload\UploadCommand;
 
@@ -23,7 +23,7 @@ $container = new \SmartData\SmartDataGenerator\Container();
 
 $application = new Application();
 //$application->add(new SourceCreateCommand());
-//$application->add(new CountryDatabaseCreateCommand());
+$application->add(new GenerateCountryDataCommand($container));
 $application->add(new GenerateRegionDataCommand($container));
 //$application->add(new UploadCommand());
 $application->run();

@@ -1,5 +1,5 @@
 <?php
-namespace SmartData\SmartDataGenerator\CountryDatabase;
+namespace SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountry;
 
 use SmartData\SmartDataGenerator\Registry;
 

@@ -4,6 +4,7 @@ namespace SmartData\SmartDataGenerator\DataGenerator\Region\Command;
 use SmartData\SmartDataGenerator\Command;
 use SmartData\SmartDataGenerator\DataGenerator\Region\RegionDataGenerator;
 use SmartData\SmartDataGenerator\DataGenerator\Region\RegionDataWriter;
+use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapCache;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +31,7 @@ class GenerateDataCommand extends Command
         $output->write('Creating the Region Database: ');
 
         if ($input->getOption('void-cache')) {
+            (new OpenStreetMapCache())->voidCache();
             (new WikipediaCache())->voidCache();
         }
 

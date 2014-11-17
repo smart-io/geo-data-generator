@@ -1,11 +1,11 @@
 <?php
-namespace SmartData\SmartDataGenerator\CountryDatabase;
+namespace SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountry;
 
 use SimpleXMLElement;
 use GuzzleHttp\Client;
 use SmartData\SmartDataGenerator\WikiParser;
 
-class CountryParser
+class WikipediaCountryParser
 {
     const NAME_URL =
         'http://en.wikipedia.org/w/api.php?action=query&titles=%s&prop=langlinks&lllimit=500&format=xml';
@@ -34,8 +34,10 @@ class CountryParser
      * @param array $country
      * @return array
      */
-    public function parseCountryPage(array $country)
+    public function parseCountry(array $country)
     {
+        var_dump($country);
+        die();
         $link = str_replace('/wiki/', '', $country['link']);
 
         $info = $this->parseCountryInfoboxes($link);
