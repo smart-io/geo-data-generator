@@ -35,23 +35,23 @@ class WikipediaCache
 
     /**
      * @param string $key
-     * @return object
+     * @return string
      */
     public function get($key)
     {
         $file = $this->getCacheFile($key);
         if (file_exists($file)) {
-            return unserialize(file_get_contents($file));
+            return file_get_contents($file);
         }
         return null;
     }
 
     /**
      * @param string $key
-     * @param object $reponse
+     * @param string $reponse
      */
     public function set($key, $reponse)
     {
-        file_put_contents($this->getCacheFile($key), serialize($reponse));
+        file_put_contents($this->getCacheFile($key), $reponse);
     }
 }

@@ -1,7 +1,6 @@
 <?php
 namespace SmartData\SmartDataGenerator\Provider\Wikipedia;
 
-use GuzzleHttp\Client;
 use SimpleXMLElement;
 
 class WikipediaProvider
@@ -9,64 +8,19 @@ class WikipediaProvider
     const SEARCH_URL = 'http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=%s&srprop=&format=xml&continue';
 
     /**
-     * @var Client
+     * @var WikipediaHttpInterface
      */
-    private $client;
+    private $http;
+
+    /**
+     * @var WikipediaXmlParser
+     */
+    private $xmlParser;
 
     public function __construct()
     {
-        $this->client = new Client();
-        $this->cache = new WikipediaCache();
-    }
-
-    /**
-     * @param SimpleXMLElement $xml
-     * @return object
-     */
-    private function convertSimpleXmlElementToObject(SimpleXMLElement $xml)
-    {
-        $object = (object)[];
-        /** @var SimpleXMLElement $value */
-        foreach ($xml as $key => $value) {
-            if ($value->count()) {
-                $property = (object)[];
-                foreach ($value as $itemKey => $item) {
-                    if (!isset($property->{$itemKey})) {
-                        $property->{$itemKey} = [];
-                    }
-                    if ($item instanceof SimpleXMLElement) {
-                        $property->{$itemKey}[] = $this->convertSimpleXmlElementToObject($item);
-                    }
-                }
-            } else {
-                $property = (object)[];
-                $property->value = $value->__toString();
-                $property->attributes = (object)[];
-                foreach ($value->attributes() as $attributeKey => $attributeValue) {
-                    if ($attributeValue instanceof SimpleXMLElement) {
-                        $property->attributes->{$attributeKey} = $attributeValue->__toString();
-                    }
-                }
-            }
-            $object->{$key} = $property;
-        }
-        return $object;
-    }
-
-    /**
-     * @param $url
-     * @return object
-     */
-    private function getUrl($url)
-    {
-        if ($this->cache->get($url)) {
-            $response = $this->cache->get($url);
-        } else {
-            $response = $this->convertSimpleXmlElementToObject($this->client->get($url)->xml());
-            $response = $response->query;
-            $this->cache->set($url, $response);
-        }
-        return $response;
+        $this->http = new WikipediaHttp();
+        $this->xmlParser = new WikipediaXmlParser();
     }
 
     /**
@@ -75,7 +29,7 @@ class WikipediaProvider
      */
     public function getRawContent($url)
     {
-        return $this->getUrl($url);
+        return $this->xmlParser->parseXml($this->http->get($url));
     }
 
     /**
@@ -84,8 +38,8 @@ class WikipediaProvider
      */
     public function getRawRevision($url)
     {
-        $response = $this->getUrl($url);
-        return $response->pages[0]->page->revisions[0]->rev->value;
+        $content = $this->xmlParser->parseXml($this->http->get($url));
+        return $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0];
     }
 
     /**
@@ -95,8 +49,8 @@ class WikipediaProvider
      */
     public function getRevision($url, $path = null)
     {
-        $response = $this->getUrl($url);
-        $content = $response->pages[0]->page->revisions[0]->rev->value;
+        $content = $this->xmlParser->parseXml($this->http->get($url));
+        $content = $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0];
         $wiki = new WikipediaParser($content);
         $content = $wiki->parse();
         if ($path) {
@@ -132,10 +86,13 @@ class WikipediaProvider
     public function getSearchResult($query)
     {
         $url = sprintf(self::SEARCH_URL, urlencode($query));
-        $response = $this->getUrl($url);
+        var_dump($this->http->get($url));
+        die();
+        $content = $this->xmlParser->parseXml($this->http->get($url));
+        $content = $content->api[0]->query[0]->search[0]->p;
 
         $results = [];
-        var_dump($url, $response->search);die();
+        var_dump($url, $content);die();
         foreach ($response->query->search->p as $result) {
             $result = current((array)$result);
             $results[] = isset($result->title) ? $result->title : null;
