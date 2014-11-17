@@ -25,6 +25,15 @@ class WikipediaProvider
 
     /**
      * @param string $url
+     * @return string
+     */
+    public function getRawResponse($url)
+    {
+        return $this->http->get($url);
+    }
+
+    /**
+     * @param string $url
      * @return object
      */
     public function getRawContent($url)
@@ -50,7 +59,6 @@ class WikipediaProvider
     public function getRevision($url, $path = null)
     {
         $content = $this->xmlParser->parseXml($this->http->get($url));
-        var_dump($content->api[0]);die();
         $content = $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0]->value;
         $wiki = new WikipediaParser($content);
         $content = $wiki->parse();

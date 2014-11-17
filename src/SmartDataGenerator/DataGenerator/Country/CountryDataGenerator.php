@@ -20,21 +20,16 @@ class CountryDataGenerator
      */
     public function genereteAllCountries()
     {
-        $regions = [];
-        $regionList = (new WikipediaCountryList())->createWikipediaCountryList();
+        $countries = [];
+        $countryList = (new WikipediaCountryList())->createWikipediaCountryList();
 
         $wikipediaCountryParser = new WikipediaCountryParser();
-        foreach ($regionList as $item) {
-            $wikipediaCountryParser->parseCountry($item);
+        foreach ($countryList as $item) {
+            if ($country = $wikipediaCountryParser->parseCountry($item)) {
+                $countries[] = array_merge($item, $country);
+            }
         }
-
-        /*$openStreetMapRegionParser = new OpenStreetMapRegionParser($this->container);
-        foreach ($regionList as $region) {
-            $regions[] = array_merge(
-                $region,
-                $openStreetMapRegionParser->parseRegion($region)
-            );
-        }*/
-        return $regions;
+        
+        return $countries;
     }
 }

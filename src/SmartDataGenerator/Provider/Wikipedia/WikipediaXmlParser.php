@@ -25,7 +25,7 @@ class WikipediaXmlParser
         $object = (object)[];
         if ($element->hasChildNodes()) {
             foreach ($element->childNodes as $child) {
-                if (!$child instanceof DOMText) {
+                if (!$child instanceof DOMText && isset($child->tagName)) {
                     if (!isset($object->{$child->tagName})) {
                         $object->{$child->tagName} = [];
                     }
