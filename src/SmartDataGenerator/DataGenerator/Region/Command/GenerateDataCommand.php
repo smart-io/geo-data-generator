@@ -29,7 +29,7 @@ class GenerateDataCommand extends Command
             (new WikipediaCache())->voidCache();
         }
 
-        $generator = new RegionDataGenerator();
+        $generator = new RegionDataGenerator($this->getContainer());
         $regions = $generator->genereteAllRegion();
 
         var_dump($regions);

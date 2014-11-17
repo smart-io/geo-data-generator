@@ -25,7 +25,7 @@ class WikipediaProvider
 
     /**
      * @param string $url
-     * @return string
+     * @return object
      */
     public function getRawContent($url)
     {
@@ -39,7 +39,7 @@ class WikipediaProvider
     public function getRawRevision($url)
     {
         $content = $this->xmlParser->parseXml($this->http->get($url));
-        return $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0];
+        return $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0]->value;
     }
 
     /**
@@ -50,7 +50,7 @@ class WikipediaProvider
     public function getRevision($url, $path = null)
     {
         $content = $this->xmlParser->parseXml($this->http->get($url));
-        $content = $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0];
+        $content = $content->api[0]->query[0]->pages[0]->page[0]->revisions[0]->rev[0]->value;
         $wiki = new WikipediaParser($content);
         $content = $wiki->parse();
         if ($path) {
@@ -86,17 +86,13 @@ class WikipediaProvider
     public function getSearchResult($query)
     {
         $url = sprintf(self::SEARCH_URL, urlencode($query));
-        var_dump($this->http->get($url));
-        die();
         $content = $this->xmlParser->parseXml($this->http->get($url));
-        $content = $content->api[0]->query[0]->search[0]->p;
+        $results = $content->api[0]->query[0]->search[0]->p;
 
-        $results = [];
-        var_dump($url, $content);die();
-        foreach ($response->query->search->p as $result) {
-            $result = current((array)$result);
-            $results[] = isset($result->title) ? $result->title : null;
+        $retval = [];
+        foreach ($results as $result) {
+            $retval[] = isset($result->attributes->title) ? $result->attributes->title : null;
         }
-        return $results;
+        return $retval;
     }
 }
