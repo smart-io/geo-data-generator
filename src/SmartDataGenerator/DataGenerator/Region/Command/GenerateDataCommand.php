@@ -3,6 +3,7 @@ namespace SmartData\SmartDataGenerator\DataGenerator\Region\Command;
 
 use SmartData\SmartDataGenerator\Command;
 use SmartData\SmartDataGenerator\DataGenerator\Region\RegionDataGenerator;
+use SmartData\SmartDataGenerator\DataGenerator\Region\RegionDataWriter;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,7 @@ class GenerateDataCommand extends Command
         ini_set('memory_limit', '-1');
         set_time_limit(0);
 
-        $output->write('Creating the Region Database: ', true);
+        $output->write('Creating the Region Database: ');
 
         if ($input->getOption('void-cache')) {
             (new WikipediaCache())->voidCache();
@@ -34,12 +35,7 @@ class GenerateDataCommand extends Command
 
         $generator = new RegionDataGenerator($this->getContainer());
         $regions = $generator->genereteAllRegion();
-
-
-        die();
-
-        $mapper = new RegionMapper($this->getRegistry());
-        $mapper->mapArrayToJson($countriesArray);
+        (new RegionDataWriter($this->getContainer()))->writeAllRegion($regions);
 
         $output->write('[ <fg=green>OK</fg=green> ]', true);
     }

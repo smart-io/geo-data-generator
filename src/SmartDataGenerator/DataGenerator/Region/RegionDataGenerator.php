@@ -30,7 +30,6 @@ class RegionDataGenerator
                 $openStreetMapRegionParser->parseRegion($region)
             );
         }
-        (new RegionDataWriter($this->container))->writeAllRegion($regions);
         return $regions;
     }
 }
