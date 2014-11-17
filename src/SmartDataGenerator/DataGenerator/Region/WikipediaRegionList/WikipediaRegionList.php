@@ -25,16 +25,16 @@ class WikipediaRegionList
                     $region['country'] = strtoupper($country);
                     switch ($regionType) {
                         case 'states':
-                            $region['type'] = State::class;
+                            $region['type'] = 'State';
                             break;
                         case 'federal_districts':
-                            $region['type'] = FederalDistrict::class;
+                            $region['type'] = 'Federal District';
                             break;
                         case 'territories':
-                            $region['type'] = Territory::class;
+                            $region['type'] = 'Territory';
                             break;
                         case 'provinces':
-                            $region['type'] = Province::class;
+                            $region['type'] = 'Province';
                             break;
                     }
                     $regions[] = $region;

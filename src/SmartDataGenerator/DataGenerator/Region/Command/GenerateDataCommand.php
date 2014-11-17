@@ -23,6 +23,9 @@ class GenerateDataCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit(0);
+
         $output->write('Creating the Region Database: ', true);
 
         if ($input->getOption('void-cache')) {
@@ -32,7 +35,6 @@ class GenerateDataCommand extends Command
         $generator = new RegionDataGenerator($this->getContainer());
         $regions = $generator->genereteAllRegion();
 
-        var_dump($regions);
 
         die();
 
