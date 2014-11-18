@@ -42,7 +42,16 @@ class CountryDataWriter
         if ($files = scandir($dir)) {
             foreach ($files as $file) {
                 if ($file !== '.' && $file !== '..') {
-                    unlink($dir . '/' . $file);
+                    if (is_file($dir . '/' . $file)) {
+                        unlink($dir . '/' . $file);
+                    } else {
+                        foreach (scandir($dir . '/' . $file) as $childFile) {
+                            if ($childFile !== '.' && $childFile !== '..') {
+                                unlink($dir . '/' . $file . '/' . $childFile);
+                            }
+                        }
+                        rmdir($dir . '/' . $file);
+                    }
                 }
             }
         }
