@@ -17,7 +17,7 @@ use Symfony\Component\Console\Application;
 use SmartData\SmartDataGenerator\Meta\Command\GenerateMetaCommand;
 use SmartData\SmartDataGenerator\DataGenerator\Country\Command\GenerateDataCommand as GenerateCountryDataCommand;
 use SmartData\SmartDataGenerator\DataGenerator\Region\Command\GenerateDataCommand as GenerateRegionDataCommand;
-//use SmartData\SmartDataGenerator\Upload\UploadCommand;
+use SmartData\SmartDataGenerator\Uploader\Command\UploadCommand;
 
 $container = new \SmartData\SmartDataGenerator\Container();
 
@@ -25,5 +25,5 @@ $application = new Application();
 $application->add(new GenerateMetaCommand($container));
 $application->add(new GenerateCountryDataCommand($container));
 $application->add(new GenerateRegionDataCommand($container));
-//$application->add(new UploadCommand());
+$application->add(new UploadCommand($container));
 $application->run();

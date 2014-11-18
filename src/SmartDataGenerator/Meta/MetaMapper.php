@@ -1,15 +1,13 @@
 <?php
 namespace SmartData\SmartDataGenerator\Meta;
 
-use SmartData\SmartDataGenerator\Config;
-
 class MetaMapper
 {
     /**
      * @param MetaInterface $meta
      * @return array
      */
-    public function mapToJson(MetaInterface $meta)
+    public function mapObjectToArray(MetaInterface $meta)
     {
         $retval = [];
         if ($meta->getType()) {
@@ -40,13 +38,13 @@ class MetaMapper
     }
 
     /**
-     * @param Config $config
+     * @param array $array
      * @return Meta[]
      */
-    public function mapFromJson(Config $config)
+    public function mapCollectionFromArray(array $array)
     {
         $metaCollection = [];
-        foreach ((new MetaLoader)->loadMetaJson($config->getGeneratorStorage()) as $parameters) {
+        foreach ($array as $parameters) {
             $metaCollection[] = new Meta($parameters);
         }
         return $metaCollection;

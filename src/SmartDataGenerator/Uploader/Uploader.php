@@ -2,6 +2,14 @@
 namespace SmartData\SmartDataGenerator\Uploader;
 
 use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\Meta\MetaFile;
+use SmartData\SmartDataGenerator\Meta\MetaMapper;
+use SmartData\SmartDataGenerator\Meta\MetaPersister;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
 class Uploader
 {
@@ -11,71 +19,102 @@ class Uploader
     private $container;
 
     /**
-     * @param Container $container
+     * @var QuestionHelper
      */
-    public function __construct(Container $container)
+    private $question;
+
+    /**
+     * @param Container $container
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param QuestionHelper $question
+     */
+    public function __construct(
+        Container $container,
+        InputInterface $input,
+        OutputInterface $output,
+        QuestionHelper $question
+    )
     {
         $this->container = $container;
+        $this->input = $input;
+        $this->output = $output;
+        $this->question = $question;
     }
 
     public function uploadAll()
     {
+        $this->checkMeta();
+        list($server, $path) = $this->getPreferences();
+
+        $localStorage = realpath($this->container->getConfig()->getGeneratorStorage());
+        exec("rsync -rave ssh {$localStorage}/* {$server}:{$path}");
+
+    }
+
+    /**
+     * @return array
+     */
+    private function getPreferences()
+    {
+        $preference = $this->container->getPreference();
+
+        $providerRemote = $preference->get('provider_remote');
+        $useProviderRemoteQuestion = new ConfirmationQuestion(
+            "Use remote {$providerRemote['server']} ({$providerRemote['path']}) [Y/n]: "
+        );
+
+        if (
+            null !== $providerRemote &&
+            $this->question->ask($this->input, $this->output, $useProviderRemoteQuestion)
+        ) {
+            $server = $providerRemote['server'];
+            $path = $providerRemote['path'];
+        } else {
+            $remoteServerQuestion = new Question("Remote server: ");
+            $remotePathQuestion = new Question("Path on remote server: ");
+
+            $server = $this->question->ask($this->input, $this->output, $remoteServerQuestion);
+            $path = $this->question->ask($this->input, $this->output, $remotePathQuestion);
+
+            $preference->set('provider_remote', ['server' => $server, 'path' => $path]);
+        }
+
+        return [$server, $path];
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function checkMeta()
+    {
         $localStorage = $this->container->getConfig()->getGeneratorStorage();
 
-        $sourceMapper = new SourceMapper();
-        $sources = $sourceMapper->mapFromJson($this->getRegistry()->getConfig());
+        $metaData = (new MetaPersister($this->container))->loadMeta();
+        $metaData = (new MetaMapper)->mapCollectionFromArray($metaData);
 
-        foreach ($sources as $source) {
-            if (stripos($source->getProvider(), 'smartdataprovider.com')) {
-                $file = $localStorage . '/' . $source->getPath() . '/' . $source->getFilename();
+        foreach ($metaData as $meta) {
+            if (stripos($meta->getProvider(), 'smartdataprovider.com')) {
+                $file = $localStorage . '/' . $meta->getPath() . '/' . $meta->getFilename();
                 if (!is_file($file)) {
-                    $output->write(
-                        '<error>Failed: Some files are not generated, use the generate command</error>',
-                        true
-                    );
-                    return;
+                    throw new \Exception("Failed: Some files are not generated, use the generate command");
                 }
 
-                if ($source->getComponents()) {
+                if ($meta->getComponents()) {
                     $data = json_decode(file_get_contents($file), true);
 
-                    foreach ($source->getComponents() as $componentName => $component) {
+                    foreach ($meta->getComponents() as $componentName => $component) {
                         foreach ($data as $entry) {
                             $key = $entry[$component['key']];
                             $entryFile = $localStorage . '/' . $component['path'] . '/' .
                                 sprintf($component['filename'], $key);
                             if (!is_file($entryFile)) {
-                                $output->write(
-                                    '<error>Failed: Some files are not generated, use the generate command</error>',
-                                    true
-                                );
-                                return;
+                                throw new \Exception("Failed: Some files are not generated, use the generate command");
                             }
                         }
                     }
                 }
             }
         }
-
-        $preference = $this->getRegistry()->getPreference();
-
-        $provierRemote = $preference->get('provider_remote');
-        if (
-            null !== $provierRemote &&
-            $this->dialog->askConfirmation(
-                $output,
-                "Use remote {$provierRemote['server']} ({$provierRemote['path']}) [Y/n]: ",
-                false
-            )
-        ) {
-            $server = $provierRemote['server'];
-            $path = $provierRemote['path'];
-        } else {
-            $server = $this->dialog->ask($output, 'Remote server: ');
-            $path = $this->dialog->ask($output, 'Path on remote server: ');
-
-            $preference->set('provider_remote', ['server' => $server, 'path' => $path]);
-        }
-
     }
 }

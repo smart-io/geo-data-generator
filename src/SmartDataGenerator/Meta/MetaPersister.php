@@ -3,7 +3,7 @@ namespace SmartData\SmartDataGenerator\Meta;
 
 use SmartData\SmartDataGenerator\Container;
 
-class MetaWriter
+class MetaPersister
 {
     const JSON_FILE = 'meta.json';
 
@@ -25,5 +25,15 @@ class MetaWriter
             mkdir(dirname($file), 0777, true);
         }
         file_put_contents($file, json_encode($data));
+    }
+
+    /**
+     * @return array
+     */
+    public function loadMeta()
+    {
+        $file = $this->container->getConfig()->getMetaStorage() . DIRECTORY_SEPARATOR . self::JSON_FILE;
+        $content = file_get_contents($file);
+        return json_decode($content, true);
     }
 }

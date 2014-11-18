@@ -6,13 +6,11 @@ use SmartData\SmartDataGenerator\Container;
 class MetaGenerator
 {
     /**
-     * @var MetaMapper
+     * @param Container $container
      */
-    private $metaMapper;
-
     public function __construct(Container $container)
     {
-
+        $this->container = $container;
     }
 
     /**
@@ -30,21 +28,11 @@ class MetaGenerator
         }
 
         $meta = [];
+        $metaMapper = new MetaMapper();
         foreach ($classes as $class) {
-            $meta[] = $this->getMetaMapper()->mapToJson(new $class);
+            $meta[] = $metaMapper->mapObjectToArray(new $class);
         }
 
         return $meta;
-    }
-
-    /**
-     * @return MetaMapper
-     */
-    public function getMetaMapper()
-    {
-        if (null === $this->metaMapper) {
-            $this->metaMapper = new MetaMapper();
-        }
-        return $this->metaMapper;
     }
 }

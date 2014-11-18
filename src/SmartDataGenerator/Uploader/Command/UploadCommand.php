@@ -1,7 +1,6 @@
 <?php
-namespace SmartData\SmartDataGenerator\Upload;
+namespace SmartData\SmartDataGenerator\Uploader\Command;
 
-use SmartData\SmartDataGenerator\SourceMapper;
 use SmartData\SmartDataGenerator\Uploader\Uploader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,14 +24,15 @@ class UploadCommand extends Command
         ini_set('memory_limit', '-1');
         set_time_limit(0);
 
-        $uploader = new Uploader();
-        $uploader->uploadAll();
-
-
         $output->write('Uploading files: ');
 
-        $localStorage = realpath($localStorage);
-        exec("rsync -rave ssh {$localStorage}/* {$server}:{$path}");
+        (new Uploader(
+            $this->getContainer(),
+            $input,
+            $output,
+            $this->question
+        ))->uploadAll();
+
         $output->write('[ <fg=green>DONE</fg=green> ]', true);
     }
 }
