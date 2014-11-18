@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\SmartDataGenerator\Source;
+namespace SmartData\SmartDataGenerator\Meta\Type;
 
-use SmartData\SmartDataGenerator\AbstractSource;
+use SmartData\SmartDataGenerator\Meta\AbstractMeta;
 
-class GeoLite2City extends AbstractSource
+class GeoLite2City extends AbstractMeta
 {
     const VERSION = '0.1.0';
     const TYPE = 'custom';

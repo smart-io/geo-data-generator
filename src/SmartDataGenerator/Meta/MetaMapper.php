@@ -6,7 +6,7 @@ use SmartData\SmartDataGenerator\Config;
 class MetaMapper
 {
     /**
-     * @param MetaInterface $source
+     * @param MetaInterface $meta
      * @return array
      */
     public function mapToJson(MetaInterface $meta)

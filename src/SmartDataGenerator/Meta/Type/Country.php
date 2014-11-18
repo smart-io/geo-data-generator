@@ -1,9 +1,9 @@
 <?php
-namespace SmartData\SmartDataGenerator\Source;
+namespace SmartData\SmartDataGenerator\Meta\Type;
 
-use SmartData\SmartDataGenerator\AbstractSource;
+use SmartData\SmartDataGenerator\Meta\AbstractMeta;
 
-class Country extends AbstractSource
+class Country extends AbstractMeta
 {
     const VERSION = '0.1.0';
     const TYPE = 'json';

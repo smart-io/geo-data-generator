@@ -66,7 +66,7 @@ class Config
     /**
      * @return string
      */
-    public function getSourceStorage()
+    public function getMetaStorage()
     {
         return $this->getStorage() . '/meta';
     }
