@@ -1,6 +1,7 @@
 <?php
 namespace SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountry;
 
+use SmartData\SmartDataGenerator\Container;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaParser;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaProvider;
 
@@ -26,10 +27,15 @@ class WikipediaCountryParser
      */
     private $wikipediaProvider;
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->wikipediaProvider = new WikipediaProvider();
+        $this->container = $container;
+        $this->wikipediaProvider = new WikipediaProvider($container);
     }
+
     /**
      * @param array $country
      * @return array

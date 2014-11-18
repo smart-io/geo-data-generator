@@ -1,35 +1,68 @@
 <?php
+namespace SmartData\SmartDataGenerator\DataGenerator\Country\OpenStreetMapCountry;
 
+use GuzzleHttp\Exception\ClientException;
+use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapParser;
+use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapProvider;
 
-/**
- * @param string $countryName
- * @return array
- */
-public function getCountryCoordinates($countryName)
+class OpenStreetMapCountryParser
 {
-    $url = sprintf(self::GEOLOCATION_URL, urlencode($countryName));
-    $result = json_decode(file_get_contents($url), true);
-    if (
-        isset($result['results'][0]['geometry']['bounds']) &&
-        isset($result['results'][0]['geometry']['location'])
-    ) {
-        $bounds = $result['results'][0]['geometry']['bounds'];
-        $location = $result['results'][0]['geometry']['location'];
-        return [
-            'boundaries' => [
-                'northeast' => [
-                    'latitude' => (string)$bounds['northeast']['lat'],
-                    'longitude' => (string)$bounds['northeast']['lng'],
-                ],
-                'southwest' => [
-                    'latitude' => (string)$bounds['southwest']['lat'],
-                    'longitude' => (string)$bounds['southwest']['lng'],
-                ]
-            ],
-            'latitude' => (string)$location['lat'],
-            'longitude' => (string)$location['lng']
-        ];
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+        $this->openStreetMapProvider = new OpenStreetMapProvider($container);
     }
 
-    return null;
+    /**
+     * @param array $country
+     * @return array
+     */
+    public function parseCountry(array $country)
+    {
+        $retval = [];
+        $results = $this->openStreetMapProvider->searchAddress($country['name']);
+        foreach ($results as $result) {
+            if (
+                isset($result['type']) && $result['type'] === 'administrative' &&
+                (
+                    isset($result['address']['country']) && isset($result['address']['country_code']) &&
+                    count($result['address']) === 2
+                ) ||
+                (
+                    isset($result['address']['country']) && isset($result['address']['country_code']) &&
+                    isset($result['address']['continent']) &&count($result['address']) === 3
+                )
+            ) {
+                $match = $result;
+            }
+        }
+        if (!isset($match)) {
+            var_dump($country['name'], $results);die();
+            trigger_error('Unable to get search information on ' . $country['name'], E_USER_ERROR);
+            return null;
+        }
+
+        try {
+            $relation = $this->openStreetMapProvider->fetchRelation($match['osm_id']);
+        } catch (ClientException $e) {
+            trigger_error('Unable to get relation information on ' . $country['name'], E_USER_ERROR);
+            return null;
+        }
+
+        $openStreetMapParser = new OpenStreetMapParser();
+
+        $retval['names'] = $openStreetMapParser->parseNames($relation);
+        $retval['timezone'] = $openStreetMapParser->parseTimeZone($relation);
+        //$retval['polygon'] = $openStreetMapParser->parsePolygon($match);
+        $retval['bounding_box'] = $openStreetMapParser->parseBoundingBox($match);
+        $retval['latitude'] = $openStreetMapParser->parseLatitude($match);
+        $retval['longitude'] = $openStreetMapParser->parseLongitude($match);
+        $retval['continent'] = $openStreetMapParser->parseContinent($relation);
+
+        return $retval;
+    }
 }

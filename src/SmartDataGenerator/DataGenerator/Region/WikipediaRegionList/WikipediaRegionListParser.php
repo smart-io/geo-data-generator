@@ -1,6 +1,7 @@
 <?php
 namespace SmartData\SmartDataGenerator\DataGenerator\Region\WikipediaRegionList;
 
+use SmartData\SmartDataGenerator\Container;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaProvider;
 
 class WikipediaRegionListParser
@@ -30,9 +31,13 @@ class WikipediaRegionListParser
      */
     private $wikipediaProvider;
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->wikipediaProvider = new WikipediaProvider();
+        $this->container = $container;
+        $this->wikipediaProvider = new WikipediaProvider($container);
     }
 
     /**

@@ -1,12 +1,12 @@
 <?php
-namespace SmartData\SmartDataGenerator\Provider\Wikipedia;
+namespace SmartData\SmartDataGenerator\Provider;
 
 use DOMDocument;
 use DOMElement;
 use DOMText;
 use DOMAttr;
 
-class WikipediaXmlParser
+class XmlParser
 {
     /**
      * @param string|DOMElement $xml

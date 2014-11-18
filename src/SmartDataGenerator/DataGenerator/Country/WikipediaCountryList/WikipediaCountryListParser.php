@@ -2,6 +2,7 @@
 namespace SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountryList;
 
 use DOMElement;
+use SmartData\SmartDataGenerator\Container;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaProvider;
 use SmartData\SmartDataGenerator\Provider\Html\HtmlParser;
 
@@ -19,9 +20,13 @@ class WikipediaCountryListParser
      */
     private $wikipediaProvider;
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->wikipediaProvider = new WikipediaProvider();
+        $this->container = $container;
+        $this->wikipediaProvider = new WikipediaProvider($container);
     }
 
     /**

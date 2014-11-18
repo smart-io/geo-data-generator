@@ -5,19 +5,28 @@ use SmartData\SmartData\Region\Type\FederalDistrict;
 use SmartData\SmartData\Region\Type\Province;
 use SmartData\SmartData\Region\Type\State;
 use SmartData\SmartData\Region\Type\Territory;
+use SmartData\SmartDataGenerator\Container;
 
 class WikipediaRegionList
 {
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @return array
      */
     public function createWikipediaRegionList()
     {
-        $listParser = new WikipediaRegionListParser();
+        $listParser = new WikipediaRegionListParser($this->container);
         $regionList = $listParser->parseRegionList();
 
         $regions = [];
-        $regionParser = new WikipediaRegionListItemParser();
+        $regionParser = new WikipediaRegionListItemParser($this->container);
         foreach ($regionList as $country => $regionTypes) {
             foreach ($regionTypes as $regionType => $regionItems) {
                 foreach ($regionItems as $region) {

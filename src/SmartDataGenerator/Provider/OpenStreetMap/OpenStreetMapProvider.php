@@ -1,7 +1,9 @@
 <?php
 namespace SmartData\SmartDataGenerator\Provider\OpenStreetMap;
 
-use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaXmlParser;
+use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\Provider\Http;
+use SmartData\SmartDataGenerator\Provider\XmlParser;
 
 class OpenStreetMapProvider
 {
@@ -15,9 +17,13 @@ class OpenStreetMapProvider
         'Washington, D.C.' => 'District of Columbia'
     ];
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->http = new OpenStreetMapHttp();
+        $this->container = $container;
+        $this->http = new Http($container);
     }
 
     /**
@@ -42,6 +48,6 @@ class OpenStreetMapProvider
     public function fetchRelation($relationId, $language = 'en')
     {
         $url = sprintf(self::RELATION_URL, urlencode($relationId), $language);
-        return (new WikipediaXmlParser)->parseXml($this->http->get($url));
+        return (new XmlParser)->parseXml($this->http->get($url));
     }
 }

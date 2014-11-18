@@ -22,7 +22,7 @@ class RegionDataGenerator
     public function genereteAllRegion()
     {
         $regions = [];
-        $regionList = (new WikipediaRegionList())->createWikipediaRegionList();
+        $regionList = (new WikipediaRegionList($this->container))->createWikipediaRegionList();
         $openStreetMapRegionParser = new OpenStreetMapRegionParser($this->container);
         foreach ($regionList as $region) {
             $regions[] = array_merge(

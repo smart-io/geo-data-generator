@@ -1,14 +1,20 @@
 <?php
 namespace SmartData\SmartDataGenerator\DataGenerator\Region\OpenStreetMapRegion;
 
+use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapParser;
 use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapProvider;
 use GuzzleHttp\Exception\ClientException;
 
 class OpenStreetMapRegionParser
 {
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->openStreetMapProvider = new OpenStreetMapProvider();
+        $this->container = $container;
+        $this->openStreetMapProvider = new OpenStreetMapProvider($container);
     }
 
     /**
@@ -18,132 +24,35 @@ class OpenStreetMapRegionParser
     public function parseRegion(array $region)
     {
         $retval = [];
-        $query = "{$region['name']}, {$region['country']}";
-        $searchResults = $this->openStreetMapProvider->searchAddress($query);
-        foreach ($searchResults as $searchResult) {
-            if (isset($searchResult['type']) && $searchResult['type'] === 'administrative') {
-                $search = $searchResult;
+        $results = $this->openStreetMapProvider->searchAddress("{$region['name']}, {$region['country']}");
+        foreach ($results as $search) {
+            if (isset($search['type']) && $search['type'] === 'administrative') {
+                $match = $search;
                 break;
             }
         }
-        if (!isset($search)) {
+        if (!isset($match)) {
             trigger_error('Unable to get search information on ' . $region['name'], E_USER_ERROR);
             return null;
         }
 
         try {
-            $relation = $this->openStreetMapProvider->fetchRelation($search['osm_id']);
+            $relation = $this->openStreetMapProvider->fetchRelation($match['osm_id']);
         } catch (ClientException $e) {
             trigger_error('Unable to get relation information on ' . $region['name'], E_USER_ERROR);
             return null;
         }
 
-        $retval['names'] = $this->parseNames($relation);
-        $retval['timezone'] = $this->parseTimeZone($relation);
+        $openStreetMapParser = new OpenStreetMapParser();
+
+        $retval['names'] = $openStreetMapParser->parseNames($relation);
+        $retval['timezone'] = $openStreetMapParser->parseTimeZone($relation);
         //$retval['polygon'] = $this->parsePolygon($search);
-        $retval['bounding_box'] = $this->parseBoundingBox($search);
-        $retval['latitude'] = $this->parseLatitude($search);
-        $retval['longitude'] = $this->parseLongitude($search);
-        $retval['long_code'] = $this->parseLongCode($relation);
+        $retval['bounding_box'] = $openStreetMapParser->parseBoundingBox($match);
+        $retval['latitude'] = $openStreetMapParser->parseLatitude($match);
+        $retval['longitude'] = $openStreetMapParser->parseLongitude($match);
+        $retval['long_code'] = $openStreetMapParser->parseRegionLongCode($relation);
 
         return $retval;
-    }
-
-    /**
-     * @param object $content
-     * @return array
-     */
-    private function parseNames($content)
-    {
-        $names = [];
-        foreach ($content->osm[0]->relation[0]->tag as $tag) {
-            if (stripos($tag->attributes->k, 'name:') === 0) {
-                $names[substr($tag->attributes->k, strlen('name:'))] = $tag->attributes->v;
-            }
-        }
-        return $names;
-    }
-
-    /**
-     * @param object $content
-     * @return string
-     */
-    private function parseTimeZone($content)
-    {
-        foreach ($content->osm[0]->relation[0]->tag as $tag) {
-            if ($tag->attributes->k === 'timezone') {
-                return $tag->attributes->v;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param array $content
-     * @return array
-     * @todo
-     */
-    private function parsePolygon($content)
-    {
-        $coordinates = [];
-        if (isset($content['polygonpoints'])) {
-            foreach ($content['polygonpoints'] as $coordinate) {
-                $coordinates[] = [$coordinate[0], $coordinate[1]];
-            }
-        } else {
-            trigger_error('Unable to get polygon points for ' . $content['display_name']);
-        }
-        return $coordinates;
-    }
-
-    /**
-     * @param array $content
-     * @return array
-     */
-    private function parseBoundingBox($content)
-    {
-        $boundingBox = [
-            'nortWestCorner' => [
-                'latitude' => $content['boundingbox'][1],
-                'longitude' => $content['boundingbox'][2]
-            ],
-            'southEastCorner' => [
-                'latitude' => $content['boundingbox'][0],
-                'longitude' => $content['boundingbox'][3]
-            ]
-        ];
-        return $boundingBox;
-    }
-
-    /**
-     * @param array $content
-     * @return string
-     */
-    private function parseLatitude($content)
-    {
-        return $content['lat'];
-    }
-
-    /**
-     * @param array $content
-     * @return string
-     */
-    private function parseLongitude($content)
-    {
-        return $content['lon'];
-    }
-
-    /**
-     * @param object $content
-     * @return string
-     */
-    private function parseLongCode($content)
-    {
-        foreach ($content->osm[0]->relation[0]->tag as $tag) {
-            if ($tag->attributes->k === 'ISO3166-2') {
-                return $tag->attributes->v;
-            }
-        }
-        return null;
     }
 }

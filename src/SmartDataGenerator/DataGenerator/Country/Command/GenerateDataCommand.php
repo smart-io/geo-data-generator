@@ -3,6 +3,7 @@ namespace SmartData\SmartDataGenerator\DataGenerator\Country\Command;
 
 use SmartData\SmartDataGenerator\Command;
 use SmartData\SmartDataGenerator\DataGenerator\Country\CountryDataGenerator;
+use SmartData\SmartDataGenerator\Provider\Cache;
 use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapCache;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaCache;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,14 +29,14 @@ class GenerateDataCommand extends Command
         set_time_limit(0);
 
         if ($input->getOption('void-cache')) {
-            (new OpenStreetMapCache())->voidCache();
-            (new WikipediaCache())->voidCache();
+            (new Cache($this->getContainer()))->voidCache();
         }
 
         $output->write('Creating the Country Database: ', true);
 
         $generator = new CountryDataGenerator($this->getContainer());
         $countries = $generator->genereteAllCountries();
+        var_dump($countries);die();
 
         //(new RegionDataWriter($this->getContainer()))->writeAllRegion($regions);
 

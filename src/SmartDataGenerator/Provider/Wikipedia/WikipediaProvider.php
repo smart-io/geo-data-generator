@@ -1,26 +1,33 @@
 <?php
 namespace SmartData\SmartDataGenerator\Provider\Wikipedia;
 
-use SimpleXMLElement;
+use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\Provider\Http;
+use SmartData\SmartDataGenerator\Provider\XmlParser;
+use SmartData\SmartDataGenerator\Provider\HttpInterface;
 
 class WikipediaProvider
 {
     const SEARCH_URL = 'http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=%s&srprop=&format=xml&continue';
 
     /**
-     * @var WikipediaHttpInterface
+     * @var HttpInterface
      */
     private $http;
 
     /**
-     * @var WikipediaXmlParser
+     * @var XmlParser
      */
     private $xmlParser;
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        $this->http = new WikipediaHttp();
-        $this->xmlParser = new WikipediaXmlParser();
+        $this->container = $container;
+        $this->http = new Http($container);
+        $this->xmlParser = new XmlParser();
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
-namespace SmartData\SmartDataGenerator\Provider\OpenStreetMap;
+namespace SmartData\SmartDataGenerator\Provider;
 
 use GuzzleHttp\Client;
+use SmartData\SmartDataGenerator\Container;
 
-class OpenStreetMapHttp implements OpenStreetMapHttpInterface
+class Http implements HttpInterface
 {
     /**
      * @var Client
@@ -11,14 +12,18 @@ class OpenStreetMapHttp implements OpenStreetMapHttpInterface
     private $client;
 
     /**
-     * @var OpenStreetMapCache
+     * @var Cache
      */
     private $cache;
 
-    public function __construct()
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
+        $this->container = $container;
         $this->client = new Client();
-        $this->cache = new OpenStreetMapCache();
+        $this->cache = new Cache($container);
     }
 
     /**

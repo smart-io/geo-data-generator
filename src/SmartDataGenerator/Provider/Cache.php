@@ -1,17 +1,26 @@
 <?php
-namespace SmartData\SmartDataGenerator\Provider\Wikipedia;
+namespace SmartData\SmartDataGenerator\Provider;
 
-class WikipediaCache
+use SmartData\SmartDataGenerator\Container;
+
+class Cache
 {
-    const CACHE_KEY = '42zGe8NPuwTJ4P8B';
     const PERIOD = 3600;
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * @return string
      */
     private function getCacheDir()
     {
-        return realpath(__DIR__ . "/../../../../storage/cache");
+        return realpath($this->container->getConfig()->getStorage() . DIRECTORY_SEPARATOR . "cache");
     }
 
     /**
@@ -20,15 +29,15 @@ class WikipediaCache
      */
     private function getCacheFile($key)
     {
-        $key = self::CACHE_KEY . hash('ripemd160', $key);
+        $key = hash('ripemd160', $key);
         return $this->getCacheDir() . DIRECTORY_SEPARATOR. $key;
     }
 
     public function voidCache()
     {
         foreach (scandir($this->getCacheDir()) as $item) {
-            if (substr($item, 0, strlen(self::CACHE_KEY)) === self::CACHE_KEY) {
-                unlink($this->getCacheDir() . DIRECTORY_SEPARATOR . $item);
+            if ($item !== '.' && $item !== '..') {
+                unlink($this->getCacheDir() . DIRECTORY_SEPARATOR . basename($item));
             }
         }
     }
