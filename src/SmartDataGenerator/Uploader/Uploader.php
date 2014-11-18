@@ -2,7 +2,6 @@
 namespace SmartData\SmartDataGenerator\Uploader;
 
 use SmartData\SmartDataGenerator\Container;
-use SmartData\SmartDataGenerator\Meta\MetaFile;
 use SmartData\SmartDataGenerator\Meta\MetaMapper;
 use SmartData\SmartDataGenerator\Meta\MetaPersister;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -48,8 +47,28 @@ class Uploader
         list($server, $path) = $this->getPreferences();
 
         $localStorage = realpath($this->container->getConfig()->getGeneratorStorage());
-        exec("rsync -rave ssh {$localStorage}/* {$server}:{$path}");
+        $this->addAdditionalFiles($localStorage);
+        exec("rsync -avz --delete -e ssh '{$localStorage}/' '{$server}:{$path}'");
+        $this->removeAdditionalFiles($localStorage);
+    }
 
+    /**
+     * @param $dir
+     */
+    private function addAdditionalFiles($dir)
+    {
+        $meta = $this->container->getConfig()->getMetaStorage() . DIRECTORY_SEPARATOR . MetaPersister::JSON_FILE;
+        copy($meta, $dir . DIRECTORY_SEPARATOR . MetaPersister::JSON_FILE);
+        file_put_contents($dir . DIRECTORY_SEPARATOR . '.gitignore', "*" . PHP_EOL . "!.gitignore" . PHP_EOL);
+    }
+
+    /**
+     * @param $dir
+     */
+    private function removeAdditionalFiles($dir)
+    {
+        unlink($dir . DIRECTORY_SEPARATOR . MetaPersister::JSON_FILE);
+        unlink($dir . DIRECTORY_SEPARATOR . '.gitignore');
     }
 
     /**
@@ -84,6 +103,7 @@ class Uploader
     }
 
     /**
+     * @return array
      * @throws \Exception
      */
     private function checkMeta()
@@ -93,8 +113,10 @@ class Uploader
         $metaData = (new MetaPersister($this->container))->loadMeta();
         $metaData = (new MetaMapper)->mapCollectionFromArray($metaData);
 
+        $metaDirs = [];
         foreach ($metaData as $meta) {
             if (stripos($meta->getProvider(), 'smartdataprovider.com')) {
+                $metaDirs[] = $meta->getPath();
                 $file = $localStorage . '/' . $meta->getPath() . '/' . $meta->getFilename();
                 if (!is_file($file)) {
                     throw new \Exception("Failed: Some files are not generated, use the generate command");
@@ -116,5 +138,6 @@ class Uploader
                 }
             }
         }
+        return $metaDirs;
     }
 }
