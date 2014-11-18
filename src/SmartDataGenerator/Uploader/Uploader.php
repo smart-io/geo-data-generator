@@ -128,7 +128,8 @@ class Uploader
                     foreach ($meta->getComponents() as $componentName => $component) {
                         foreach ($data as $entry) {
                             $key = $entry[$component['key']];
-                            $entryFile = $localStorage . '/' . $component['path'] . '/' .
+                            $entryFile = $localStorage . '/' .
+                                sprintf($component['path'], $key) . '/' .
                                 sprintf($component['filename'], $key);
                             if (!is_file($entryFile)) {
                                 throw new \Exception("Failed: Some files are not generated, use the generate command");

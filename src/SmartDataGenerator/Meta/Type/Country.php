@@ -17,6 +17,12 @@ class Country extends AbstractMeta
             'provider' => 'https://smartdataprovider.com/countries/countries/%s.json',
             'path' => 'countries/countries',
             'filename' => '%s.json',
+        ],
+        'country/polygon' => [
+            'key' => 'shortCode',
+            'provider' => 'https://smartdataprovider.com/countries/countries/%s/polygon.json',
+            'path' => 'countries/countries/%s',
+            'filename' => 'polygon.json',
         ]
     ];
 }
