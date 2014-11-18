@@ -35,7 +35,6 @@ class OpenStreetMapParser
     /**
      * @param array $content
      * @return array
-     * @todo
      */
     public function parsePolygon($content)
     {
@@ -45,7 +44,7 @@ class OpenStreetMapParser
                 $coordinates[] = [$coordinate[0], $coordinate[1]];
             }
         } else {
-            trigger_error('Unable to get polygon points for ' . $content['display_name']);
+            return null;
         }
         return $coordinates;
     }

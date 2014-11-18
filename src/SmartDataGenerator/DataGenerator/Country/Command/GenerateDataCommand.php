@@ -3,6 +3,8 @@ namespace SmartData\SmartDataGenerator\DataGenerator\Country\Command;
 
 use SmartData\SmartDataGenerator\Command;
 use SmartData\SmartDataGenerator\DataGenerator\Country\CountryDataGenerator;
+use SmartData\SmartDataGenerator\DataGenerator\Country\CountryDataMapper;
+use SmartData\SmartDataGenerator\DataGenerator\Country\CountryDataWriter;
 use SmartData\SmartDataGenerator\Provider\Cache;
 use SmartData\SmartDataGenerator\Provider\OpenStreetMap\OpenStreetMapCache;
 use SmartData\SmartDataGenerator\Provider\Wikipedia\WikipediaCache;
@@ -32,22 +34,13 @@ class GenerateDataCommand extends Command
             (new Cache($this->getContainer()))->voidCache();
         }
 
-        $output->write('Creating the Country Database: ', true);
+        $output->write('Creating the Country Database: ');
 
-        $generator = new CountryDataGenerator($this->getContainer());
-        $countries = $generator->genereteAllCountries();
-        var_dump($countries);die();
+        $countries = (new CountryDataGenerator($this->getContainer()))->genereteAllCountries();
+        $countries = (new CountryDataMapper($this->getContainer()))->mapGeneratedCountryToArray($countries);
 
-        //(new RegionDataWriter($this->getContainer()))->writeAllRegion($regions);
+        (new CountryDataWriter($this->getContainer()))->writeCountryData($countries);
 
         $output->write('[ <fg=green>OK</fg=green> ]', true);
-/*
-        $parser = new CountryListParser();
-        $countriesArray = $parser->parseCountryListPage($output);
-
-        $mapper = new CountryMapper($this->getRegistry());
-        $mapper->mapArrayToJson($countriesArray);
-
-        $output->write('[ <fg=green>OK</fg=green> ]', true);*/
     }
 }

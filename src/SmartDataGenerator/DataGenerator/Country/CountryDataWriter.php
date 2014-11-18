@@ -1,66 +1,41 @@
 <?php
-namespace SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountry;
+namespace SmartData\SmartDataGenerator\DataGenerator\Country;
 
-use SmartData\SmartDataGenerator\Registry;
+use SmartData\SmartDataGenerator\Container;
 
-class CountryMapper
+class CountryDataWriter
 {
-    const JSON_FILENAME = 'countries/countries.json';
-    const COUNTRY_JSON_FILENAME = 'countries/countries/%s.json';
+    const LIST_JSON_FILENAME = 'countries/countries.json';
+    const ITEM_JSON_FILENAME = 'countries/countries/%s.json';
+    const ITEM_POLYGON_JSON_FILENAME = 'countries/countries/%s/polygon.json';
 
     /**
-     * @var Registry
+     * @var Container
      */
-    private $registry;
+    private $container;
 
     /**
-     * @param Registry $registry
+     * @param Container $container
      */
-    public function __construct(Registry $registry)
+    public function __construct(Container $container)
     {
-        $this->registry = $registry;
+        $this->container = $container;
     }
 
     /**
      * @param array $countries
-     * @return array
      */
-    public function mapArrayToJson(array $countries)
+    public function writeCountryData(array $countries)
     {
-        $languages = $this->registry->getSupportedLanguageCollection();
-        $jsonFile =  $this->registry->getConfig()->getFactoryStorage() . '/' . self::JSON_FILENAME;
+        $listFile = $this->container->getConfig()->getGeneratorStorage() . '/' . self::LIST_JSON_FILENAME;
 
-        $json = [];
-        foreach ($countries as $country) {
-            $names = [];
-            foreach ($languages->getSupportedLanguages() as $language) {
-                if (isset($country['names'][$language])) {
-                    $names[$language] = $country['names'][$language];
-                }
-            }
-
-            $value = [
-                'shortCode' => $country['codes']['iso'],
-                'code' => $country['codes']['code'],
-                'names' => $names,
-                'latitude' => $country['coordinates']['latitude'],
-                'longitude' => $country['coordinates']['longitude'],
-                'boundariesNortheastLatitude' => $country['coordinates']['boundaries']['northeast']['latitude'],
-                'boundariesNortheastLongitude' => $country['coordinates']['boundaries']['northeast']['longitude'],
-                'boundariesSouthwestLatitude' => $country['coordinates']['boundaries']['southwest']['latitude'],
-                'boundariesSouthwestLongitude' => $country['coordinates']['boundaries']['southwest']['longitude'],
-            ];
-
-            $json[] = $value;
-        }
-
-        $dir = dirname($jsonFile);
+        $dir = dirname($listFile);
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $countryJsonFile =  $this->registry->getConfig()->getFactoryStorage() . '/' . self::COUNTRY_JSON_FILENAME;
-        $dir = dirname($countryJsonFile);
+        $itemJsonFile = $this->container->getConfig()->getGeneratorStorage() . '/' . self::ITEM_JSON_FILENAME;
+        $dir = dirname($itemJsonFile);
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -72,12 +47,53 @@ class CountryMapper
             }
         }
 
-        foreach ($json as $country) {
-            $file = sprintf($countryJsonFile, $country['shortCode']);
-            file_put_contents($file, json_encode($country));
+        foreach ($countries as $country) {
+            $this->writeItemFile($country);
         }
 
-        file_put_contents($jsonFile, json_encode($json));
-        return $json;
+        $this->writeListFile($countries);
+    }
+
+    /**
+     * @param array $countries
+     */
+    private function writeListFile(array $countries)
+    {
+        $listFile = $this->container->getConfig()->getGeneratorStorage() . '/' . self::LIST_JSON_FILENAME;
+
+        $data = [];
+        foreach ($countries as $country) {
+            unset($country['polygon']);
+            $data[$country['shortCode']] = $country;
+        }
+        ksort($data);
+        $data = array_values($data);
+        file_put_contents($listFile, json_encode($data));
+    }
+
+    /**
+     * @param array $country
+     */
+    private function writeItemFile(array $country)
+    {
+        $itemJsonFile = $this->container->getConfig()->getGeneratorStorage() . '/' . self::ITEM_JSON_FILENAME;
+        $itemJsonFile = sprintf($itemJsonFile, $country['shortCode']);
+
+        $itemPoygonJsonFile = $this->container->getConfig()->getGeneratorStorage() . '/' .
+            self::ITEM_POLYGON_JSON_FILENAME;
+        $itemPoygonJsonFile = sprintf($itemPoygonJsonFile, $country['shortCode']);
+        $dir = dirname($itemPoygonJsonFile);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $itemCountry = $country;
+        unset($itemCountry['polygon']);
+
+        file_put_contents($itemJsonFile, json_encode($itemCountry));
+
+        $polygon = $country['polygon'];
+
+        file_put_contents($itemPoygonJsonFile, json_encode($polygon));
     }
 }

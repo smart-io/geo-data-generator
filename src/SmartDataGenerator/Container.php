@@ -1,6 +1,8 @@
 <?php
 namespace SmartData\SmartDataGenerator;
 
+use SmartData\SmartDataGenerator\Provider\ProviderContainer;
+
 class Container
 {
     /**
@@ -17,6 +19,11 @@ class Container
      * @var LanguageCollection
      */
     private $languageCollection;
+
+    /**
+     * @var array
+     */
+    private $container = [];
 
     /**
      * @return Config
@@ -36,6 +43,27 @@ class Container
     public function setConfig(Config $config)
     {
         $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return ProviderContainer
+     */
+    public function getProvider()
+    {
+        if (!isset($this->container['providerContainer'])) {
+            $this->container['providerContainer'] = new ProviderContainer($this);
+        }
+        return $this->container['providerContainer'];
+    }
+
+    /**
+     * @param ProviderContainer $providerContainer
+     * @return $this
+     */
+    public function setProvider(ProviderContainer $providerContainer)
+    {
+        $this->container['providerContainer'] = $providerContainer;
         return $this;
     }
 

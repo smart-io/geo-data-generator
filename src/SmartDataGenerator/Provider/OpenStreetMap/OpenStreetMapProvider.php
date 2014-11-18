@@ -7,7 +7,7 @@ use SmartData\SmartDataGenerator\Provider\XmlParser;
 
 class OpenStreetMapProvider
 {
-    const SEARCH_ADDRESS_URL = 'http://nominatim.openstreetmap.org/search?q=%s&format=json&polygon=0&addressdetails=1&limit=10&accept-language=%s';
+    const SEARCH_ADDRESS_URL = 'http://nominatim.openstreetmap.org/search?q=%s&format=json&polygon=1&addressdetails=1&limit=10&accept-language=%s';
     const RELATION_URL = 'http://www.openstreetmap.org/api/0.6/relation/%s';
 
     /**

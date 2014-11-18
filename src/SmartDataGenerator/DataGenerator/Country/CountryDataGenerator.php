@@ -2,9 +2,9 @@
 namespace SmartData\SmartDataGenerator\DataGenerator\Country;
 
 use SmartData\SmartDataGenerator\Container;
+use SmartData\SmartDataGenerator\DataGenerator\Country\GeoNamesCountry\GeoNamesCountryParser;
+use SmartData\SmartDataGenerator\DataGenerator\Country\GeoNamesCountryList\GeoNamesCountryList;
 use SmartData\SmartDataGenerator\DataGenerator\Country\OpenStreetMapCountry\OpenStreetMapCountryParser;
-use SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountry\WikipediaCountryParser;
-use SmartData\SmartDataGenerator\DataGenerator\Country\WikipediaCountryList\WikipediaCountryList;
 
 class CountryDataGenerator
 {
@@ -21,23 +21,22 @@ class CountryDataGenerator
      */
     public function genereteAllCountries()
     {
-        $countries = [];
-        $countryList = (new WikipediaCountryList($this->container))->createWikipediaCountryList();
+        $countryList = (new GeoNamesCountryList($this->container))->fetchGeoNamesCountryList();
 
-        $wikipediaCountryParser = new WikipediaCountryParser($this->container);
+        $geoNamesCountryParser = new GeoNamesCountryParser($this->container);
         foreach ($countryList as $key => $item) {
-            if ($country = $wikipediaCountryParser->parseCountry($item)) {
-                $countryList[$key] = array_merge($item, $country);
+            if ($country = $geoNamesCountryParser->parseCountry($item)) {
+                $countryList[$key] = array_merge((array)$item, $country);
             }
         }
 
         $openStreetMapCountryParser = new OpenStreetMapCountryParser($this->container);
         foreach ($countryList as $key => $item) {
             if ($country = $openStreetMapCountryParser->parseCountry($item)) {
-                $countries[] = array_merge($item, $country);
+                $countryList[$key] = array_merge((array)$item, $country);
             }
         }
 
-        return $countries;
+        return $countryList;
     }
 }

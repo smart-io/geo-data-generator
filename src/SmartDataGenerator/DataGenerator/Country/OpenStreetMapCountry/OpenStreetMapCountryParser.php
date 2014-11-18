@@ -23,8 +23,7 @@ class OpenStreetMapCountryParser
      */
     public function parseCountry(array $country)
     {
-        $retval = [];
-        $results = $this->openStreetMapProvider->searchAddress($country['name']);
+        $results = $this->openStreetMapProvider->searchAddress($country['countryName']);
         foreach ($results as $result) {
             if (
                 isset($result['type']) && $result['type'] === 'administrative' &&
@@ -41,27 +40,22 @@ class OpenStreetMapCountryParser
             }
         }
         if (!isset($match)) {
-            var_dump($country['name'], $results);die();
-            trigger_error('Unable to get search information on ' . $country['name'], E_USER_ERROR);
             return null;
         }
 
         try {
             $relation = $this->openStreetMapProvider->fetchRelation($match['osm_id']);
         } catch (ClientException $e) {
-            trigger_error('Unable to get relation information on ' . $country['name'], E_USER_ERROR);
             return null;
         }
 
         $openStreetMapParser = new OpenStreetMapParser();
 
-        $retval['names'] = $openStreetMapParser->parseNames($relation);
+        $retval = [];
         $retval['timezone'] = $openStreetMapParser->parseTimeZone($relation);
-        //$retval['polygon'] = $openStreetMapParser->parsePolygon($match);
-        $retval['bounding_box'] = $openStreetMapParser->parseBoundingBox($match);
+        $retval['polygon'] = $openStreetMapParser->parsePolygon($match);
         $retval['latitude'] = $openStreetMapParser->parseLatitude($match);
         $retval['longitude'] = $openStreetMapParser->parseLongitude($match);
-        $retval['continent'] = $openStreetMapParser->parseContinent($relation);
 
         return $retval;
     }
