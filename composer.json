@@ -1,5 +1,14 @@
 {
   "name": "smartdata/generator",
+  "type": "project",
+  "homepage": "https://github.com/mysmartdata/smartdatagenerator",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gabriel Bull",
+      "email": "me@gabrielbull.com"
+    }
+  ],
   "require": {
     "php": ">=5.4.0",
     "symfony/console": "~2",
