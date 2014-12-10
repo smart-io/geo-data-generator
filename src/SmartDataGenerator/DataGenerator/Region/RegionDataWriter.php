@@ -69,9 +69,12 @@ class RegionDataWriter
             'country' => $region['country'],
             'type' => $region['type'],
             'timezone' => $region['timezone'],
-            'bounding_box' => $region['bounding_box'],
             'latitude' => $region['latitude'],
             'longitude' => $region['longitude'],
+            'north' => isset($region['bounding_box']['north']) ? (string)$region['bounding_box']['north'] : null,
+            'east' => isset($region['bounding_box']['east']) ? (string)$region['bounding_box']['east'] : null,
+            'south' => isset($region['bounding_box']['south']) ? (string)$region['bounding_box']['south'] : null,
+            'west' => isset($region['bounding_box']['west']) ? (string)$region['bounding_box']['west'] : null,
         ];
     }
 
