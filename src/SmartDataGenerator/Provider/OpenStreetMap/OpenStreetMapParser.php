@@ -56,14 +56,10 @@ class OpenStreetMapParser
     public function parseBoundingBox($content)
     {
         $boundingBox = [
-            'nortWestCorner' => [
-                'latitude' => $content['boundingbox'][1],
-                'longitude' => $content['boundingbox'][2]
-            ],
-            'southEastCorner' => [
-                'latitude' => $content['boundingbox'][0],
-                'longitude' => $content['boundingbox'][3]
-            ]
+            'south' => $content['boundingbox'][0],
+            'north' => $content['boundingbox'][1],
+            'west' => $content['boundingbox'][2],
+            'east' => $content['boundingbox'][3],
         ];
         return $boundingBox;
     }
