@@ -1,4 +1,5 @@
 <?php
+
 date_default_timezone_set('UTC');
 
 $vendor = realpath(__DIR__ . '/../vendor');
@@ -13,3 +14,6 @@ if (file_exists($vendor . "/autoload.php")) {
         throw new Exception("Unable to load dependencies");
     }
 }
+
+global $container;
+$container = new \Smart\Geo\Generator\Container();

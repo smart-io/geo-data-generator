@@ -22,14 +22,14 @@
   },
   "autoload": {
     "psr-4": {
-      "SmartData\\SmartDataGenerator\\": "src/SmartDataGenerator"
+      "Smart\\Geo\\Generator\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SmartData\\SmartDataGenerator\\Tests\\": [
-        "tests/SmartDataGenerator/Tests",
-        "tests/SmartDataGenerator/Tests/_includes"
+      "Smart\\Geo\\Generator\\Tests\\": [
+        "tests/Generator/Tests",
+        "tests/Generator/Tests/_includes"
       ]
     }
   },
