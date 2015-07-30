@@ -1,5 +1,5 @@
-# SmartData Generator
+# Smart Geo Data Generator
 
-Used to generate SmartData Data from Open Data providers such as Wikipedia and OpenStreetMap.
+Used to generate Smart Geo data from Open Data providers such as Wikipedia and OpenStreetMap.
 
 No documentation yet.
