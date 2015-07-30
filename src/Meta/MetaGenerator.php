@@ -24,7 +24,7 @@ class MetaGenerator
         foreach ($dir as $file) {
             if ($file !== '.' && $file !== '..') {
                 $filename = str_replace('.php', '', $file);
-                $classes[] = '\\SmartData\\SmartDataGenerator\\Meta\\Type\\' . $filename;
+                $classes[] = '\\Smart\\Geo\\Generator\\Meta\\Type\\' . $filename;
             }
         }
 

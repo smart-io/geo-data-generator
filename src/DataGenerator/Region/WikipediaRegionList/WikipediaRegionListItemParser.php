@@ -2,6 +2,7 @@
 
 namespace Smart\Geo\Generator\DataGenerator\Region\WikipediaRegionList;
 
+use Exception;
 use Smart\Geo\Generator\Container;
 use Smart\Geo\Generator\Provider\Wikipedia\WikipediaProvider;
 
@@ -157,17 +158,23 @@ class WikipediaRegionListItemParser
             unset($info['code']);
         }
 
+        if (!isset($info['code']) && $country === 'us' && isset($content['isocode'])) {
+            $isocode = current($content['isocode']);
+            if (strlen($isocode) === 2) {
+                $info['code'] = $isocode;
+            } else if (strlen($isocode) === 5) {
+                $info['code'] = preg_replace("/US\\-([a-zA-Z]*)/i", "$1", $isocode);
+            }
+        }
+
         if (!isset($info['code']) && $country === 'us') {
             if (!$info['code'] = $this->parseRegionCode($this->getUsRegionCode($region))) {
-                trigger_error('Not able to get info on ' . $region);
-                return null;
+                throw new Exception('Not able to get info on ' . $region);
             }
         } elseif (!isset($info['code']) && $country === 'ca') {
-            trigger_error('Not able to get info on ' . $region);
-            return null;
+            throw new Exception('Not able to get info on ' . $region);
         } elseif (!isset($info['code'])) {
-            trigger_error('Not able to get info on ' . $region);
-            return null;
+            throw new Exception('Not able to get info on ' . $region);
         }
 
         return $info;
@@ -230,7 +237,7 @@ class WikipediaRegionListItemParser
     private function getUsRegionCode($region)
     {
         $line = $this->getUsRegionLine($region);
-        if (preg_match("/<tt>([a-zA-Z]{2,2})<\\/tt>/", $line, $matches)) {
+        if (preg_match("/\\{\\{mono\\|([a-zA-Z]{2,2})\\}\\}/", $line, $matches)) {
             return next($matches);
         }
         return null;

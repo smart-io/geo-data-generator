@@ -86,7 +86,7 @@ class WikipediaRegionListParser
          * |-
          */
         $content = $this->wikipediaProvider->getRevision($url, 'majorSections.0.text');
-        $regex = "/!scope=\"row\"\\|\\{\\{flag\\|([^}]*)\\}\\}/im";
+        $regex = "/!scope=\"row\"\\|[^\\}]*\\{\\{flag\\|([^}]*)\\}\\}/im";
         preg_match_all($regex, $content, $matches);
         if (isset($matches[1])) {
             $matches = $matches[1];

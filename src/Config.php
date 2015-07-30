@@ -49,7 +49,7 @@ class Config
     public function getStorage()
     {
         if (null === $this->providerStorage) {
-            $this->providerStorage = __DIR__ . "/../../storage";
+            $this->providerStorage = __DIR__ . "/../storage";
         }
         return $this->providerStorage;
     }

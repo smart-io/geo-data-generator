@@ -3,6 +3,7 @@
 namespace Smart\Geo\Generator\Tests;
 
 use PHPUnit_Framework_TestCase;
+use Smart\Geo\Generator\Provider\Cache;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase
 {
@@ -13,5 +14,10 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     {
         global $container;
         return $container;
+    }
+
+    public function emptyCache()
+    {
+        (new Cache($this->getContainer()))->voidCache();
     }
 }

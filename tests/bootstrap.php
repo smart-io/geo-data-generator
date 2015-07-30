@@ -17,3 +17,4 @@ if (file_exists($vendor . "/autoload.php")) {
 
 global $container;
 $container = new \Smart\Geo\Generator\Container();
+$container->getConfig()->setProviderStorage(realpath(__DIR__ . "/../storage"));

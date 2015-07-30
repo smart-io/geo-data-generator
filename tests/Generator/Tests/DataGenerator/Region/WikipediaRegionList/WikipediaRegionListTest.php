@@ -7,8 +7,13 @@ use Smart\Geo\Generator\DataGenerator\Region\WikipediaRegionList\WikipediaRegion
 
 class WikipediaRegionListTest extends TestCase
 {
-    public function testConvert()
+    public function setUp()
     {
-        new WikipediaRegionList($this->getContainer());
+        $this->emptyCache();
+    }
+
+    public function testGetRegionList()
+    {
+        (new WikipediaRegionList($this->getContainer()))->createWikipediaRegionList();
     }
 }

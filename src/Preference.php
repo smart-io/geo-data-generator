@@ -21,7 +21,7 @@ class Preference
 
     public function __construct()
     {
-        $this->path = __DIR__ . '/../../storage/preferences/preferences.json';
+        $this->path = __DIR__ . '/../storage/preferences/preferences.json';
         if (!is_dir(dirname($this->path))) {
             mkdir(dirname($this->path), 0777, true);
         }

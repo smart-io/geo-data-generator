@@ -2,6 +2,7 @@
 
 namespace Smart\Geo\Generator\DataGenerator\Region\WikipediaRegionList;
 
+use Exception;
 use SmartData\SmartData\Region\Type\FederalDistrict;
 use SmartData\SmartData\Region\Type\Province;
 use SmartData\SmartData\Region\Type\State;
@@ -31,7 +32,12 @@ class WikipediaRegionList
         foreach ($regionList as $country => $regionTypes) {
             foreach ($regionTypes as $regionType => $regionItems) {
                 foreach ($regionItems as $region) {
-                    $region = $regionParser->parseRegion($region, $regionType, $country);
+                    try {
+                        $region = $regionParser->parseRegion($region, $regionType, $country);
+                    } catch (Exception $e) {
+                        echo $e->getMessage() . PHP_EOL;
+                        continue;
+                    }
                     $region['country'] = strtoupper($country);
                     switch ($regionType) {
                         case 'states':

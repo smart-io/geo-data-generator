@@ -2,6 +2,7 @@
 
 namespace Smart\Geo\Generator\DataGenerator\Region\OpenStreetMapRegion;
 
+use Exception;
 use Smart\Geo\Generator\Container;
 use Smart\Geo\Generator\Provider\OpenStreetMap\OpenStreetMapParser;
 use Smart\Geo\Generator\Provider\OpenStreetMap\OpenStreetMapProvider;
@@ -21,6 +22,7 @@ class OpenStreetMapRegionParser
     /**
      * @param array $region
      * @return array
+     * @throws Exception
      */
     public function parseRegion(array $region)
     {
@@ -33,15 +35,13 @@ class OpenStreetMapRegionParser
             }
         }
         if (!isset($match)) {
-            trigger_error('Unable to get search information on ' . $region['name'], E_USER_ERROR);
-            return null;
+            throw new Exception('Unable to get search information on ' . $region['name']);
         }
 
         try {
             $relation = $this->openStreetMapProvider->fetchRelation($match['osm_id']);
         } catch (ClientException $e) {
-            trigger_error('Unable to get relation information on ' . $region['name'], E_USER_ERROR);
-            return null;
+            throw new Exception('Unable to get relation information on ' . $region['name']);
         }
 
         $openStreetMapParser = new OpenStreetMapParser();

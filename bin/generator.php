@@ -14,12 +14,12 @@ if (file_exists($vendor . "/autoload.php")) {
 }
 
 use Symfony\Component\Console\Application;
-use SmartData\SmartDataGenerator\Meta\Command\GenerateMetaCommand;
-use SmartData\SmartDataGenerator\DataGenerator\Country\Command\GenerateDataCommand as GenerateCountryDataCommand;
-use SmartData\SmartDataGenerator\DataGenerator\Region\Command\GenerateDataCommand as GenerateRegionDataCommand;
-use SmartData\SmartDataGenerator\Uploader\Command\UploadCommand;
+use Smart\Geo\Generator\Meta\Command\GenerateMetaCommand;
+use Smart\Geo\Generator\DataGenerator\Country\Command\GenerateDataCommand as GenerateCountryDataCommand;
+use Smart\Geo\Generator\DataGenerator\Region\Command\GenerateDataCommand as GenerateRegionDataCommand;
+use Smart\Geo\Generator\Uploader\Command\UploadCommand;
 
-$container = new \SmartData\SmartDataGenerator\Container();
+$container = new \Smart\Geo\Generator\Container();
 
 $application = new Application();
 $application->add(new GenerateMetaCommand($container));
