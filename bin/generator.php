@@ -26,4 +26,5 @@ $application->add(new GenerateMetaCommand($container));
 $application->add(new GenerateCountryDataCommand($container));
 $application->add(new GenerateRegionDataCommand($container));
 $application->add(new UploadCommand($container));
+$application->add(new \Smart\Geo\Generator\Dist\Command\DistCommand($container));
 $application->run();
