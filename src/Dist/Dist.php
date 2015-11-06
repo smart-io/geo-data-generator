@@ -38,7 +38,7 @@ class Dist
 
     public function create()
     {
-        //(new DataUpdater())->update();
+        (new DataUpdater())->update();
         $this->check();
         $this->compress();
         $this->move();
@@ -60,12 +60,12 @@ class Dist
 
     public function move()
     {
-        if (!is_dir(__DIR__ . "/../../storage/dist")) {
-            mkdir(__DIR__ . "/../../storage/dist", 0777, true);
+        if (!is_dir(__DIR__ . "/../../storage/generator")) {
+            mkdir(__DIR__ . "/../../storage/generator", 0777, true);
         }
-        if (is_file(__DIR__ . "/../../storage/dist/geo.tar.gz")) {
-            unlink(__DIR__ . "/../../storage/dist/geo.tar.gz");
+        if (is_file(__DIR__ . "/../../storage/generator/geo.tar.gz")) {
+            unlink(__DIR__ . "/../../storage/generator/geo.tar.gz");
         }
-        rename(self::PATH . "/geo.tar.gz", __DIR__ . "/../../storage/dist/geo.tar.gz");
+        rename(self::PATH . "/geo.tar.gz", __DIR__ . "/../../storage/generator/geo.tar.gz");
     }
 }
